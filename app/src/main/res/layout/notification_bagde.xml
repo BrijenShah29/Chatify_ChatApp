@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:focusable="true"
+    android:clipToPadding="false"
+    android:background="@drawable/round_shape">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textSize="12sp"
+            android:id="@+id/cart_badge_text"
+            android:textColor="#FFFFFF"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_gravity="center" />
+
+    </FrameLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/webFragment2"
+        android:title="Stories"
+        android:icon="@drawable/instagram_stories"/>
+
+    <item android:id="@+id/chatScreenFragment"
+        android:title="Chat"
+        android:icon="@drawable/comment"/>
+
+    <item android:id="@+id/callsFragment"
+        android:title="Calls"
+        android:icon="@drawable/calls"/>
+
+    <item android:id="@+id/settingsFragment"
+        android:title="Settings"
+        android:icon="@drawable/settings"/>
+
+
+
+</menu>

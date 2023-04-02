@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="4dp"
+        android:gravity="end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/audioPlayerLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+                android:id="@+id/voicePlayerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:enableVisualizer="true"
+                app:visualizationPlayedColor="#ff7700"
+                app:visualizationNotPlayedColor="#727171"
+                app:playPauseBackgroundColor="@color/primary_color"
+                app:timingBackgroundColor="@color/primary_light_color"
+                app:seekBarProgressColor="#000"
+                app:showShareButton="false"
+                app:shareCornerRadius="100"
+                app:playPauseCornerRadius="100"
+                app:showTiming="true"
+                app:viewCornerRadius="100"
+                app:viewBackground="@color/semiGray"
+                app:progressTimeColor="#000"
+                app:seekBarThumbColor="#FFC107"
+                app:shareBackgroundColor="@color/primary_color"
+                app:playProgressbarColor="@color/primary_light_color"
+                app:shareText="SHARE ME"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sentImageLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sentImage"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_2sdp"/>
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/outGoingMessageLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="start"
+            android:background="@color/primary_color"
+            android:backgroundTint="@color/primary_color"
+            android:elevation="4dp"
+            android:padding="8dp"
+            app:cardCornerRadius="16dp">
+
+            <TextView
+                android:id="@+id/outgoing_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:textAlignment="textEnd"
+                android:layout_margin="@dimen/_6sdp"
+                android:layout_weight="1"
+                android:text="Hi"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+        </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom|end"
+                android:layout_gravity="bottom"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/outgoing_message_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="10:30AM"
+                    android:textColor="@color/semiDarkGray"
+                    android:textSize="10sp" />
+
+                <ImageView
+                    android:id="@+id/outgoing_message_seen_icon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:src="@drawable/read" />
+            </LinearLayout>
+
+            </LinearLayout>
+    </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/outgoingReaction"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

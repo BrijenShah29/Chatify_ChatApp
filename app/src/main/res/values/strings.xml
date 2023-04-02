@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Chatify</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="greetings1">Enjoy the new experience of chating with global friends with the CHATIFY</string>
+    <string name="greetings2">Connect people around the world for free</string>
+    <string name="resend_otp"><u>Resend OTP</u></string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="space"> </string>
+    <string name="profileimage">profileImage</string>
+    <string name="registered_number">Registered number: %s</string>
+</resources>

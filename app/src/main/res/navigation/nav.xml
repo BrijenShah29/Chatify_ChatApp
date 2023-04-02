@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav.xml"
+    app:startDestination="@id/welcomePage">
+
+    <fragment
+        android:id="@+id/welcomePage"
+        android:name="com.example.chatapp_chatify.Fragments.LoginFragments.WelcomePage"
+        android:label="fragment_welcome_page"
+        tools:layout="@layout/fragment_welcome_page" >
+        <action
+            android:id="@+id/action_welcomePage_to_authenticationFragment"
+            app:destination="@id/authenticationFragment" />
+        <action
+            android:id="@+id/action_welcomePage_to_chatScreenFragment"
+            app:destination="@id/chatScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authenticationFragment"
+        android:name="com.example.chatapp_chatify.Fragments.LoginFragments.AuthenticationFragment"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication" >
+        <action
+            android:id="@+id/action_authenticationFragment_to_enterOTPFragment"
+            app:destination="@id/enterOTPFragment" />
+        <action
+            android:id="@+id/action_authenticationFragment_to_chatScreenFragment"
+            app:destination="@id/chatScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/enterOTPFragment"
+        android:name="com.example.chatapp_chatify.Fragments.LoginFragments.EnterOTPFragment"
+        android:label="fragment_enter_o_t_p"
+        tools:layout="@layout/fragment_enter_o_t_p" >
+        <action
+            android:id="@+id/action_enterOTPFragment_to_registerationFragment"
+            app:destination="@id/registerationFragment" />
+        <action
+            android:id="@+id/action_enterOTPFragment_to_chatScreenFragment"
+            app:destination="@id/chatScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerationFragment"
+        android:name="com.example.chatapp_chatify.Fragments.LoginFragments.RegistrationFragment"
+        android:label="fragment_registeration"
+        tools:layout="@layout/fragment_registeration" >
+        <action
+            android:id="@+id/action_registerationFragment_to_chatScreenFragment"
+            app:destination="@id/chatScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatScreenFragment"
+        android:name="com.example.chatapp_chatify.Fragments.MainScreensFragments.ChatHomeScreenFragment"
+        android:label="fragment_chat_screen"
+        tools:layout="@layout/fragment_chat_screen" >
+        <action
+            android:id="@+id/action_chatScreenFragment_to_settingsFragment2"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_chatScreenFragment_to_webFragment22"
+            app:destination="@id/webFragment2" />
+        <action
+            android:id="@+id/action_chatScreenFragment_to_callsFragment22"
+            app:destination="@id/callsFragment2" />
+        <action
+            android:id="@+id/action_chatScreenFragment_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webFragment2"
+        android:name="com.example.chatapp_chatify.Fragments.MainScreensFragments.StatusFragment"
+        android:label="fragment_web"
+        tools:layout="@layout/fragment_web" />
+    <fragment
+        android:id="@+id/callsFragment2"
+        android:name="com.example.chatapp_chatify.Fragments.MainScreensFragments.CallsFragment"
+        android:label="fragment_calls"
+        tools:layout="@layout/fragment_calls" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.chatapp_chatify.Fragments.MainScreensFragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/userChatFragment"
+        android:name="com.example.chatapp_chatify.Fragments.UserChatFragment"
+        android:label="fragment_user_chat"
+        tools:layout="@layout/fragment_user_chat" />
+</navigation>

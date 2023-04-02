@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/myAccount_drawer"
+            android:icon="@drawable/user_logo"
+            android:title=" MY ACCOUNT"/>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/calls_drawer"
+            android:icon="@drawable/calls"
+            android:title=" CALLS"/>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/web_drawer"
+            android:icon="@drawable/domains"
+            android:title=" WEB"/>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/signOut_drawer"
+            android:icon="@drawable/logout"
+            android:title=" SIGN OUT"/>
+    </group>
+
+
+
+</menu>
