@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.View.VISIBLE
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,7 @@ import com.example.chatapp_chatify.DataClass.UserStatus
 import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.ViewModel.FirebaseMessagesViewModel
 import com.example.chatapp_chatify.databinding.FragmentWebBinding
+import com.example.chatapp_chatify.utils.Constant
 import com.example.chatapp_chatify.utils.UserManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -39,7 +41,9 @@ class StatusFragment : Fragment() {
     lateinit var binding : FragmentWebBinding
     private lateinit var mProgressBar: ProgressBar
 
-    val currentUserStory = kotlin.collections.ArrayList<UserStatus>()
+    private var previousStory = ""
+
+    private val currentUserStory = kotlin.collections.ArrayList<UserStatus>()
 
     @Inject
     lateinit var userManager: UserManager
@@ -47,7 +51,7 @@ class StatusFragment : Fragment() {
     @Inject
     lateinit var auth:FirebaseAuth
 
-    val viewModel by viewModels<FirebaseMessagesViewModel>()
+    private val viewModel by viewModels<FirebaseMessagesViewModel>()
 
     override fun onStart() {
         super.onStart()
@@ -99,12 +103,14 @@ class StatusFragment : Fragment() {
         Glide.with(requireContext()).load(Uri.parse(userManager.getUserProfileImage())).centerCrop().into(binding.userProfile)
         // LISTEN STATUSES FETCHED FROM DATABASE
         viewModel.startListeningToStories.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-
+            Constant.stories.clear()
+            currentUserStory.clear()
             val data = kotlin.collections.ArrayList<UserStatus>()
             if (it.isNotEmpty()) {
                 // SEND LIST TO ADAPTER
 
                 for (items in it) {
+                    data.clear()
                     if (items.uploaderUid != auth.currentUser?.uid.toString()) {
                         data.add(items)
                         Log.d("fetchedStatuesMainOther", items.name!!)
@@ -113,10 +119,12 @@ class StatusFragment : Fragment() {
                     } else {
                         currentUserStory.add(items)
                         // set last updated story as profile image
-                        for (statuses in items.status) {
+                        for (statuses in items.status)
+                        {
                               //  Glide.with(requireActivity().applicationContext).load().centerCrop().into(binding.userProfile)
-                            Log.d("statusImagelink",statuses.imageUrl.toString())
+                            Log.d("statusImageLink",statuses.imageUrl.toString())
                             Picasso.get().load(Uri.parse(statuses.imageUrl)).fit().centerCrop().into(binding.userProfile)
+                            Constant.stories.add(statuses)
                             }
                         binding.userStatusCircles.setPortionsCount(items.status.size)
                         binding.userStatusCircles.setPortionsColor(ResourcesCompat.getColor(requireContext().resources, R.color.purple_200,null))
@@ -161,14 +169,44 @@ class StatusFragment : Fragment() {
             {
                 Snackbar.make(requireView(),"No Story Uploaded !",Snackbar.LENGTH_SHORT).show()
             }
-
-
-
         }
 
+        binding.deleteStoryImage.setOnClickListener {
+            if(binding.deleteStoriesCardview.visibility == View.VISIBLE)
+            {
+                binding.deleteStoriesCardview.visibility = View.GONE
+            }else
+            {
+                binding.deleteStoriesCardview.visibility = View.VISIBLE
+            }
+        }
+        binding.deletePreviousStory.setOnClickListener {
+            // DELETE LAST STORY FROM FIREBASE
+            if(currentUserStory.size>0)
+            {
+                viewModel.deleteLastStory()
+                val status = currentUserStory[currentUserStory.lastIndex].status
+                    for (picture in status)
+                    {
+                        Picasso.get().load(Uri.parse(picture.imageUrl)).fit().centerCrop().into(binding.userProfile)
+                    }
+            }
+            else
+            {
+                Picasso.get().load(Uri.parse(userManager.getUserProfileImage())).fit().centerCrop().into(binding.userProfile)
+                Snackbar.make(requireView(),"No More Status",Snackbar.LENGTH_SHORT).show()
+            }
 
+                binding.deleteStoriesCardview.visibility = View.GONE
+        }
 
-
+        binding.deleteAllStoriesButton.setOnClickListener {
+            viewModel.deleteAllStories()
+            currentUserStory.clear()
+            Picasso.get().load(Uri.parse(userManager.getUserProfileImage())).fit().centerCrop().into(binding.userProfile)
+            Snackbar.make(requireView(),"All status has been deleted",Snackbar.LENGTH_SHORT).show()
+            binding.deleteStoriesCardview.visibility = View.GONE
+        }
 
         return binding.root
     }
@@ -179,7 +217,7 @@ class StatusFragment : Fragment() {
 
         viewModel.storyImageUrl.observe(viewLifecycleOwner, androidx.lifecycle.Observer { statusImageFromStorage->
 
-            if(!statusImageFromStorage.isNullOrBlank())
+            if(!statusImageFromStorage.isNullOrBlank() && statusImageFromStorage!=previousStory)
             {
                 val time = Calendar.getInstance().time.time
                 val timestamp = time.toLong()
@@ -193,7 +231,7 @@ class StatusFragment : Fragment() {
                 data.put("uploaderUid",auth.currentUser?.uid.toString())
                 data.put("name",userManager.getUserName().toString())
                 data.put("profileImage",userManager.getUserProfileImage().toString())
-                data.put("lastUpdated",timestamp)
+                data.put("lastUpdated",status.timeStamp!!)
 
                 // SENDING STORY TO SERVER
                 viewModel.sendUserStory(data,status)
@@ -215,10 +253,9 @@ class StatusFragment : Fragment() {
                     }
                 })
 
-
+                previousStory = statusImageFromStorage
 
             }
-
 
         })
     }
@@ -242,8 +279,6 @@ class StatusFragment : Fragment() {
         {
             return  String.format("today at %02d:%02d %s" ,cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), att)
         }
-
-
 
 
     }
@@ -274,9 +309,4 @@ class StatusFragment : Fragment() {
             .show()
 
     }
-
-
-
-
-
 }

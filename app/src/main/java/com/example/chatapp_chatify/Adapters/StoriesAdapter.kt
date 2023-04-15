@@ -58,8 +58,6 @@ class StoriesAdapter(val context: Context, val userName: String?) : ListAdapter<
         }
 
 
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoriesViewHolder {

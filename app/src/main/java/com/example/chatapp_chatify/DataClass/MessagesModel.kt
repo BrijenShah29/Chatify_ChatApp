@@ -17,7 +17,7 @@ data class MessagesModel(
         val timestamp : Long ? = 0,
         var messageReaction : Int ? = 6,
         val senderRoom : String?="",
-        val messageType : Int ? = 0
+        var messageType : Int ? = 0
     )
 
 {

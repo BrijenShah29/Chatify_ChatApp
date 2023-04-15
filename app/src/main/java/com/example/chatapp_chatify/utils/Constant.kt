@@ -1,5 +1,11 @@
 package com.example.chatapp_chatify.utils
 
+import android.content.Intent
+import com.example.chatapp_chatify.CallingActivities.AudioConferenceActivity
+import com.example.chatapp_chatify.CallingActivities.VideoConferenceActivity
+import com.example.chatapp_chatify.DataClass.StatusImages
+import com.example.chatapp_chatify.MainActivity
+
 interface Constant {
     companion object {
 
@@ -40,6 +46,26 @@ interface Constant {
         const val MESSAGE_TYPE_IMAGE = 1
 
         const val MESSAGE_TYPE_AUDIO = 2
+
+        const val MESSAGE_TYPE_LOCATION =3
+        const val CALL_TYPE_AUDIO = 0
+        const val CALL_TYPE_VIDEO = 1
+        const val USER_OFFLINE = 0
+        const val USER_ONLINE = 1
+        const val INCOMING_CALL ="INCOMING"
+        const val OUTGOING_CALL ="OUTGOING"
+
+
+
+        const val USER_TOKEN_FILE = "USER_TOKEN_FILE"
+        const val USER_TOKEN = "USER_TOKEN"
+
+        val stories = ArrayList<StatusImages>()
+        var CALL_TOKEN = ""
+
+        const val BASE_URL = "https://maps.googleapis.com/"
+
+
 
 
     }

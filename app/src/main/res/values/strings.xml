@@ -12,4 +12,67 @@
     <string name="space"> </string>
     <string name="profileimage">profileImage</string>
     <string name="registered_number">Registered number: %s</string>
+    <string name="appId">75b91ced96654825b6eab6ed01491624</string>
+    <string name="appCertificate">049e5679c0ac4693b8d1ba291801c179</string>
+    <string name="channel_name">chatApp_chatify</string>
+    <string name="caller_name_placeholder">Caller Name</string>
+    <string name="call_type_description">callType</string>
+    <string name="caller_image_description">callerImage</string>
+    <string name="incoming">Incoming Call</string>
+    <string name="operational_status">Operational Status : Open Now </string>
+    <string name="operational_status_close">Operational Status : Closed </string>
+    <string name="location"><u>Location</u>  </string>
+    <string name="locationIncoming">  <u>Location</u></string>
+
+    <string-array name="place_types">
+        <item>Restaurant</item>
+        <item>Mall</item>
+        <item>Movie Theatre</item>
+        <item>Cafe</item>
+        <item>Bar</item>
+        <item>Museum</item>
+        <item>Bank</item>
+        <item>ATM</item>
+        <item>Gym</item>
+        <item>Park</item>
+        <item>Hospital</item>
+        <item>Pharmacy</item>
+        <item>Gas station</item>
+        <item>Art Gallery</item>
+        <item>Amusement Park</item>
+        <item>Zoo</item>
+        <item>Beach</item>
+        <item>Hiking Trail</item>
+        <item>Park</item>
+        <item>Stadium</item>
+        <item>Library</item>
+    </string-array>
+
+    <string-array name="radius_array">
+        <item>1 km</item>
+        <item>5 km</item>
+        <item>10 km</item>
+        <item>15 km</item>
+        <item>20 km</item>
+        <item>25 km</item>
+        <item>30 km</item>
+        <item>35 km</item>
+        <item>40 km</item>
+        <item>45 km</item>
+        <item>50 km</item>
+    </string-array>
+    <string-array name="radius_array_int">
+        <item>1000</item>
+        <item>5000</item>
+        <item>10000</item>
+        <item>15000</item>
+        <item>20000</item>
+        <item>25000</item>
+        <item>30000</item>
+        <item>35000</item>
+        <item>40000</item>
+        <item>45000</item>
+        <item>50000</item>
+    </string-array>
+
 </resources>

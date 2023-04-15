@@ -3,36 +3,53 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.14268585131894485" />
         <entry key="../../.gradle/caches/transforms-3/b35de7e7ba754f75e08f27d0957b3a85/transformed/jetified-RecordView-3.1.3/res/drawable/recv_bg_mic.xml" value="0.238" />
         <entry key="../../.gradle/caches/transforms-3/b35de7e7ba754f75e08f27d0957b3a85/transformed/jetified-RecordView-3.1.3/res/drawable/recv_ic_mic_white.xml" value="0.238" />
+        <entry key="../../.gradle/caches/transforms-3/baab5b5f602bfb5f03174de0c202f8e4/transformed/jetified-ChatVoicePlayer-1.1.0/res/drawable-anydpi-v21/ic_play_arrow_white_24dp.xml" value="0.238" />
         <entry key="../../.gradle/caches/transforms-3/e4b6bd901f68b4769d41fd199aab83bd/transformed/RecordView-3.1.3/res/drawable/recv_ic_arrow.xml" value="0.238" />
+        <entry key="app/src/main/res/drawable/audio_shape.xml" value="0.238" />
+        <entry key="app/src/main/res/drawable/audio_shape_incoming.xml" value="0.17" />
+        <entry key="app/src/main/res/drawable/audio_shape_outgoing.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/buttonshape.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circlshape.xml" value="0.1755" />
+        <entry key="app/src/main/res/drawable/ic_baseline_change_circle_24.xml" value="0.1005" />
+        <entry key="app/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.238" />
+        <entry key="app/src/main/res/drawable/ic_baseline_pause_24_blue.xml" value="0.238" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.161" />
+        <entry key="app/src/main/res/drawable/ic_play_blue.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_undraw_login.xml" value="0.257" />
         <entry key="app/src/main/res/drawable/round_shape.xml" value="0.1755" />
         <entry key="app/src/main/res/drawable/toggle_button.xml" value="0.1755" />
         <entry key="app/src/main/res/drawable/user_offline.xml" value="0.1755" />
         <entry key="app/src/main/res/drawable/user_online.xml" value="0.1755" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25314183123877915" />
         <entry key="app/src/main/res/layout/drawer_header.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/fragment_audio_conference.xml" value="0.13425925925925927" />
         <entry key="app/src/main/res/layout/fragment_authentication.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/fragment_calls.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/fragment_chat_screen.xml" value="0.10740740740740741" />
+        <entry key="app/src/main/res/layout/fragment_conference.xml" value="0.13425925925925927" />
         <entry key="app/src/main/res/layout/fragment_enter_o_t_p.xml" value="0.3010467529296875" />
+        <entry key="app/src/main/res/layout/fragment_get_place_location.xml" value="0.22826086956521738" />
+        <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_registeration.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.19610507246376813" />
-        <entry key="app/src/main/res/layout/fragment_user_chat.xml" value="0.4374893188476562" />
+        <entry key="app/src/main/res/layout/fragment_user_chat.xml" value="0.3805970149253731" />
         <entry key="app/src/main/res/layout/fragment_web.xml" value="0.34429690595986195" />
         <entry key="app/src/main/res/layout/fragment_welcome_page.xml" value="0.27637130801687765" />
-        <entry key="app/src/main/res/layout/incoming_message_layout.xml" value="0.44431203206380204" />
+        <entry key="app/src/main/res/layout/incoming_message_layout.xml" value="0.52506103515625" />
+        <entry key="app/src/main/res/layout/landmark_layout_list.xml" value="0.22826086956521738" />
+        <entry key="app/src/main/res/layout/layout_delete_message.xml" value="0.3533834586466165" />
         <entry key="app/src/main/res/layout/layout_incoming_outgoing_messages.xml" value="0.3112478947293931" />
         <entry key="app/src/main/res/layout/layout_messages_chatscreen.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/layout_outgoing_message.xml" value="0.4998275756835938" />
+        <entry key="app/src/main/res/layout/layout_outgoing_message.xml" value="0.375" />
         <entry key="app/src/main/res/layout/layout_user_stories.xml" value="0.3589966483738112" />
         <entry key="app/src/main/res/layout/notification_bagde.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/progress_layout.xml" value="0.19605263157894737" />
         <entry key="app/src/main/res/menu/appbar_menu.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.28125" />
-        <entry key="app/src/main/res/menu/side_drawer_navigation.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/menu/side_drawer_navigation.xml" value="0.1" />
       </map>
     </option>
   </component>

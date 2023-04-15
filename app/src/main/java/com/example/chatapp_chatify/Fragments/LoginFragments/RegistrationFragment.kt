@@ -148,9 +148,7 @@ class RegistrationFragment : Fragment() {
 
 
             viewModel.uploadStatus.observe(viewLifecycleOwner, Observer {
-
                 if (it) {
-
                     mProgressBar.visibility = View.INVISIBLE
                     // STORE USER NAME INTO SHARED PREFERENCES
                     userManager.saveUserName(binding.firstName.text.toString())
@@ -163,7 +161,7 @@ class RegistrationFragment : Fragment() {
                     findNavController().navigate(R.id.action_registerationFragment_to_chatScreenFragment,null,
                         NavOptions.Builder().setPopUpTo(R.id.welcomePage, true).build())
                     val nav = Navigation.findNavController(requireView())
-                    //nav.navigate( R.id.action_registerationFragment_to_chatScreenFragment)
+                    //nav.navigate( R.id.action_registrationFragment_to_chatScreenFragment)
                 } else {
                     mProgressBar.visibility = View.VISIBLE
                 }

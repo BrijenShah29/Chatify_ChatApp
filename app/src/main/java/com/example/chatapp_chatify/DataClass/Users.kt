@@ -15,7 +15,8 @@ data class Users
     val uid : String="0",
     val name : String?="",
     val phoneNumber : String?="",
-    val profileImage : String?= ""
+    val profileImage : String?= "",
+    val token : String?=""
     ):Parcelable
 {
 

@@ -19,6 +19,8 @@ import com.example.chatapp_chatify.utils.Constant.Companion.USER_NAME
 import com.example.chatapp_chatify.utils.Constant.Companion.USER_NAME_FILE
 import com.example.chatapp_chatify.utils.Constant.Companion.USER_NUMBER
 import com.example.chatapp_chatify.utils.Constant.Companion.USER_NUMBER_FILE
+import com.example.chatapp_chatify.utils.Constant.Companion.USER_TOKEN
+import com.example.chatapp_chatify.utils.Constant.Companion.USER_TOKEN_FILE
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -34,6 +36,8 @@ class UserManager @Inject constructor(@ApplicationContext context: Context){
     private var prefsOppositeNumber = context.getSharedPreferences(OPPOSITE_USER_NUMBER_FILE,Context.MODE_PRIVATE)
     private var prefsOppositeUserImage = context.getSharedPreferences(OPPOSITE_USER_IMAGE_FILE,Context.MODE_PRIVATE)
     private var prefsOppositeUserId = context.getSharedPreferences(OPPOSITE_USER_ID_FILE,Context.MODE_PRIVATE)
+
+    private var prefCurrentUserToken = context.getSharedPreferences(USER_TOKEN_FILE,Context.MODE_PRIVATE)
 
 
     fun saveUserName(username : String?){
@@ -60,6 +64,12 @@ class UserManager @Inject constructor(@ApplicationContext context: Context){
         editor.apply()
     }
 
+    fun saveUserToken(token : String?){
+        val editor = prefCurrentUserToken.edit()
+        editor.putString(USER_TOKEN,token)
+        editor.apply()
+    }
+
     fun getUserName() : String? {
         return prefsName.getString(USER_NAME, USER_GUEST)
     }
@@ -75,6 +85,11 @@ class UserManager @Inject constructor(@ApplicationContext context: Context){
 
     fun getUserId() : String? {
         return prefsUserId.getString(USER_ID,null)
+    }
+
+    fun getCurrentUserToken() : String?
+    {
+        return prefCurrentUserToken.getString(Constant.USER_TOKEN,null)
     }
 
 

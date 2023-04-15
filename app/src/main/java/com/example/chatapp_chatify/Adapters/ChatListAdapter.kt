@@ -4,10 +4,14 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +20,7 @@ import com.example.chatapp_chatify.DataClass.Users
 import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.ViewModel.FirebaseMessagesViewModel
 import com.example.chatapp_chatify.databinding.LayoutMessagesChatscreenBinding
+import com.example.chatapp_chatify.utils.Constant
 import com.example.chatapp_chatify.utils.UserManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -31,12 +36,18 @@ class ChatListAdapter(
     val db: FirebaseDatabase,
     val messageViewModel: FirebaseMessagesViewModel
 ) : ListAdapter<Users,ChatListAdapter.ChatListViewHolder>(DiffUtil()){
+
     inner class ChatListViewHolder(val binding : LayoutMessagesChatscreenBinding) : RecyclerView.ViewHolder(binding.root){
         val previousTimeStamp : Long = 0
-        fun bind(item: Users, context: Context, senderRoom: String) {
+        fun bind(
+            item: Users,
+            context: Context
+        ) {
 
             binding.userName.text = item.name
             Glide.with(context).load(item.profileImage).centerCrop().into(binding.userImage)
+
+
 
         }
 
@@ -70,18 +81,20 @@ class ChatListAdapter(
         val item = getItem(position)
         var previousTime : Long = 0
         val senderRoom = auth.currentUser?.uid.toString() + item.uid.toString()
-        holder.bind(item,context, senderRoom)
+        holder.binding.onlineStatusImage.visibility = View.GONE
+        holder.binding.messageDoubleTick.visibility = GONE
+        holder.bind(item,context)
 
         db.reference.child("Chats").child(senderRoom).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
-
                     val lastMessage = snapshot.child("LastMessage").getValue(String::class.java)
                     val longTime = snapshot.child("LastMessageTime").getValue(Long::class.java)?.toLong()
                     holder.binding.messageText.text = lastMessage.toString()
                     holder.binding.messageText.setTextColor(Color.BLACK)
                     holder.binding.messageText.setTextAppearance(BOLD)
                     holder.binding.messageTime.text = getTimeFromLong(longTime!!)
+                    //holder.binding.messageDoubleTick.visibility = VISIBLE
 
                     if(previousTime!=longTime){
                         holder.binding.messageBadgeText.visibility = VISIBLE
@@ -90,12 +103,14 @@ class ChatListAdapter(
                     else
                     {
                         holder.binding.messageBadgeText.visibility = INVISIBLE
+                       // holder.binding.messageDoubleTick.visibility = VISIBLE
                     }
                     //holder.binding.messageDoubleTick.visibility = View.GONE
                 }else
                 {
                     holder.binding.messageBadgeText.visibility = INVISIBLE
                     holder.binding.messageText.text = "Tap To Chat"
+                   // holder.binding.messageDoubleTick.visibility = INVISIBLE
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -114,6 +129,7 @@ class ChatListAdapter(
             userManager.saveOppositeUserImage(item.profileImage)
             userManager.saveOppositePhoneNumber(item.phoneNumber)
             userManager.saveOppositeUserName(item.name)
+            userManager.saveUserToken(item.token)
 
 
             messageViewModel.fetchMessagesForOffLine(senderRoom)
@@ -145,9 +161,10 @@ class ChatListAdapter(
 
 
         override fun areContentsTheSame(oldItem: Users, newItem: Users): Boolean {
-            return oldItem.uid == newItem.uid &&
-                    oldItem.name == newItem.name &&
-                    oldItem.phoneNumber == newItem.phoneNumber
+//            return oldItem.uid == newItem.uid &&
+//                    oldItem.name == newItem.name &&
+//                    oldItem.phoneNumber == newItem.phoneNumber
+            return oldItem == newItem
 
         }
     }

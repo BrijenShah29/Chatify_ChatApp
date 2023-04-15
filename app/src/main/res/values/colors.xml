@@ -11,6 +11,7 @@
     <color name="secondary_color">#5B264A73</color>
     <color name="primary_light_color">#B4D8FF</color>
     <color name="semiBlack">#222222</color>
-    <color name="semiDarkGray">#FF333333</color>
-    <color name="semiGray">#33333333</color>
+    <color name="semiDarkGray">#706060</color>
+    <color name="semiGray">#33919191</color>
+    <color name="semiWhite">#f9f9f9</color>
 </resources>

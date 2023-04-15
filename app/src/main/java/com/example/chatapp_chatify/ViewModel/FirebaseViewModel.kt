@@ -96,6 +96,13 @@ class FirebaseViewModel @Inject constructor(private val firebaseUserRepository: 
      }
 
 
+    private var _updatedUserProfile = MutableLiveData<String>()
+    val updatedUserProfile : LiveData<String>
+        get() = _updatedUserProfile
+
+    fun updateUserProfile(user: HashMap<String, Any>){
+        _updatedUserProfile = firebaseUserRepository.updateUserProfile(user)
+    }
 
 
 }

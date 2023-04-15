@@ -6,25 +6,34 @@
             android:icon="@drawable/user_logo"
             android:title=" MY ACCOUNT"/>
     </group>
-
+    <item android:title="Calls">
+    <menu>
     <group android:checkableBehavior="single">
         <item android:id="@+id/calls_drawer"
             android:icon="@drawable/calls"
             android:title=" CALLS"/>
     </group>
+</menu>
+    </item>
+    <item android:title="Stories">
+        <menu>
+
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/web_drawer"
             android:icon="@drawable/domains"
-            android:title=" WEB"/>
+            android:title=" STORIES"/>
     </group>
-
-    <group android:checkableBehavior="single">
+        </menu>
+    </item>
+    <item android:title="SignOut">
+        <menu>
+        <group android:checkableBehavior="single">
         <item android:id="@+id/signOut_drawer"
             android:icon="@drawable/logout"
             android:title=" SIGN OUT"/>
     </group>
-
-
+        </menu>
+    </item>
 
 </menu>

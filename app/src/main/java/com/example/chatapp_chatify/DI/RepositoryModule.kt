@@ -6,6 +6,7 @@ import com.example.chatapp_chatify.Repository.FirebaseUserRepository
 import com.example.chatapp_chatify.RoomDB.ChatifyDao
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -23,8 +24,8 @@ object RepositoryModule {
     }
 
     @Provides
-    fun providesFirebaseMessageRepository(auth: FirebaseAuth, db : FirebaseDatabase, storage: FirebaseStorage, chatifyDao : ChatifyDao) : FirebaseMessageRepository{
-        return FirebaseMessageRepository(auth,db,storage,chatifyDao)
+    fun providesFirebaseMessageRepository(auth: FirebaseAuth, db : FirebaseDatabase, storage: FirebaseStorage, chatifyDao : ChatifyDao, userFirebaseMessaging: FirebaseMessaging) : FirebaseMessageRepository{
+        return FirebaseMessageRepository(auth,db,storage,chatifyDao,userFirebaseMessaging)
     }
 
 

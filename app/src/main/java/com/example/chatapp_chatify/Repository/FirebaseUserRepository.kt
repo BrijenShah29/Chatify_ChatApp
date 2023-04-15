@@ -4,10 +4,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.chatapp_chatify.DataClass.StatusImages
 import com.example.chatapp_chatify.DataClass.Users
 import com.example.chatapp_chatify.Repository.RepoInterface.FirebaseListenerRepository
 import com.example.chatapp_chatify.RoomDB.ChatifyDao
 import com.example.chatapp_chatify.utils.Constant
+import com.example.chatapp_chatify.utils.Constant.Companion.stories
 import com.google.firebase.auth.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -34,8 +36,9 @@ class FirebaseUserRepository @Inject constructor(
     // UPLOAD IMAGE TO FIREBASE
 
     var photoUploadStatus: FirebaseListenerRepository? = null
-    private var imageResponse = MutableLiveData<String>()
-    fun uploadPhotoToFirebaseStorage(uri: Uri,fileName: String,path:String) : LiveData<String> {
+    var imageResponse = MutableLiveData<String>()
+    var imageLink : String? = null
+    fun uploadPhotoToFirebaseStorage(uri: Uri,fileName: String,path:String) {
 
         val myRef = firebaseStorage.reference.child("$path/$fileName")
         myRef.putFile(uri)
@@ -48,7 +51,7 @@ class FirebaseUserRepository @Inject constructor(
                             it,
                             fileName
                         )
-                        imageResponse?.value = it.toString()
+                        imageResponse.value = it.toString()
                     }
                     .addOnFailureListener {
 
@@ -62,10 +65,7 @@ class FirebaseUserRepository @Inject constructor(
                     .addOnFailureListener {
                         photoUploadStatus?.isUploadToFirebaseSuccessful(false, "FAILED", null, null)
                     }
-
-
             }
-        return imageResponse
     }
 
 
@@ -176,9 +176,29 @@ class FirebaseUserRepository @Inject constructor(
                         photoUploadStatus?.isUploadToFirebaseSuccessful(false, "FAILED", null, null)
                     }
 
-
             }
         return imageResponse
+    }
+
+    private var statusReport = MutableLiveData<String>()
+    fun deleteLastStory() {
+            db.reference.child("stories").child(auth.uid.toString()).child("status").child(stories.last().timeStamp.toString())
+                .removeValue()
+    }
+
+    fun deleteAllStories() {
+        db.reference.child("stories").child(auth.uid.toString()).child("status").removeValue()
+    }
+
+    private var updateStatus = MutableLiveData<String>()
+    fun updateUserProfile(user: HashMap<String, Any>): MutableLiveData<String>
+    {
+        var status : String? = " "
+        db.reference.child("Users").child(auth.currentUser?.phoneNumber.toString()).updateChildren(user).addOnSuccessListener {
+            status = Constant.SUCCESS_MESSAGE
+        }
+        updateStatus.value = status!!
+        return updateStatus
     }
 
 }

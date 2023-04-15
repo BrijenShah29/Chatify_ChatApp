@@ -34,7 +34,7 @@
             android:gravity="center"
             android:maxLines="2"
             android:text="@string/greetings1"
-            android:textColor="@color/semiDarkGray"
+            android:textColor="#706060"
             android:textSize="@dimen/_16sdp"
             android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:text="@string/greetings2"
-            android:textColor="@color/semiGray"
+            android:textColor="#F2919191"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 

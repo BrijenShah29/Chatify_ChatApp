@@ -7,7 +7,78 @@
     android:clipToPadding="false"
     android:background="@drawable/chat_background"
     tools:context=".Fragments.UserChatFragment">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/appBar"
+            style="@style/AppTheme.PopupOverlay"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            android:elevation="0dp"
+            app:buttonGravity="center_vertical"
+            app:menu="@menu/appbar_menu"
+            app:title=""
+            app:titleTextColor="@color/primary_color"
+            android:layout_height="@dimen/_60sdp"
+            app:logoAdjustViewBounds="true"
+            android:fontFamily="@font/poppins"
+            android:textSize="@dimen/_8sdp"
+            android:gravity="center_vertical"
+            app:navigationIcon="@drawable/toggle_button"
+            app:titleCentered="true">
+            <LinearLayout
+                android:id="@+id/userDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_gravity="start"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circlshape"
+                    android:src="@drawable/user"/>
+
+
+                <ImageView
+                    android:id="@+id/online_status_image"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginEnd="14dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/circlshape"
+                    android:src="@drawable/round_shape" />
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/poppins"
+                    android:text="John Doe"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
     <RelativeLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="match_parent"
@@ -22,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/chat_bottom_layout"
-            android:layout_marginTop="@dimen/_55sdp"
+            android:layout_marginTop="@dimen/_60sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <RelativeLayout
@@ -101,13 +172,12 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_toStartOf="@id/record_button"
+                    app:counter_time_color="#ff0000"
                     app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
                     app:slide_to_cancel_arrow_color="#000000"
                     app:slide_to_cancel_bounds="8dp"
                     app:slide_to_cancel_margin_right="10dp"
-                    app:slide_to_cancel_text="Slide To Cancel"
-                    app:counter_time_color="#ff0000"
-                    />
+                    app:slide_to_cancel_text="Slide To Cancel" />
 
                 <com.devlomi.record_view.RecordButton
                     android:id="@+id/record_button"
@@ -216,9 +286,14 @@
                 android:src="@drawable/ic_close"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-
-
-
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
