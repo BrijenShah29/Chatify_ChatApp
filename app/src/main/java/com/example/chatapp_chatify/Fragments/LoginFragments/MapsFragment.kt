@@ -1,4 +1,4 @@
-package com.example.chatapp_chatify
+package com.example.chatapp_chatify.Fragments.LoginFragments
 
 import android.Manifest
 import android.content.Context
@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,6 +20,7 @@ import com.example.chatapp_chatify.Adapters.MapsPlacesAdapter
 import com.example.chatapp_chatify.DataClass.MapsModel.PlacesMarkListModel
 import com.example.chatapp_chatify.DataClass.MapsModel.Result
 import com.example.chatapp_chatify.DataClass.Users
+import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.ViewModel.MapsViewModel
 import com.example.chatapp_chatify.databinding.FragmentMapsBinding
 import com.example.chatapp_chatify.utils.OnItemSelectedListener
@@ -43,9 +43,8 @@ class MapsFragment : Fragment() {
     private var selectedRadius : String? =null
     private var previousList : PlacesMarkListModel? = null
     private var listener: OnLocationSelectedListener ? = null
-    private var lat : Double = 52.954145
-    private var lng : Double = -4.101083
-    private var latLng : LatLng? = LatLng(lat,lng)
+
+    private var latLng : LatLng? = null
 
 
     private val REQUEST_LOCATION_PERMISSION = 33
@@ -97,13 +96,13 @@ class MapsFragment : Fragment() {
                 val provider = locationManager.getBestProvider(criteria, true)
                 val location = locationManager.getLastKnownLocation(provider!!)
                 if (location != null) {
-                    val currentLatLng = LatLng(location.latitude, location.longitude)
-                    Log.d("currentLocation",currentLatLng.toString())
+                    latLng = LatLng(location.latitude, location.longitude)
+                    Log.d("currentLocation",latLng.toString())
                     val markerOptions = MarkerOptions()
                     mMap.clear()
                     markerOptions.title("Your Location")
-                    markerOptions.position(currentLatLng)
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+                    markerOptions.position(latLng!!)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!, 17f))
                 }
 
             } else {
@@ -248,11 +247,4 @@ class MapsFragment : Fragment() {
             isRecordPermissionGranted = grantResults[0] ==PackageManager.PERMISSION_GRANTED
         }
     }
-
-//    override fun onMapReady(googleMap: GoogleMap)
-//    {
-//        mMap = googleMap
-//        mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-//        mMap.uiSettings.isZoomControlsEnabled = true
-//    }
 }

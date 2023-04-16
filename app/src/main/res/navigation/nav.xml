@@ -94,7 +94,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.example.chatapp_chatify.MapsFragment"
+        android:name="com.example.chatapp_chatify.Fragments.LoginFragments.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" >
         <action
@@ -105,7 +105,7 @@
     </fragment>
     <fragment
         android:id="@+id/getPlaceLocationFragment"
-        android:name="com.example.chatapp_chatify.GetPlaceLocationFragment"
+        android:name="com.example.chatapp_chatify.Fragments.GetPlaceLocationFragment"
         android:label="fragment_get_place_location"
         tools:layout="@layout/fragment_get_place_location" />
 </navigation>

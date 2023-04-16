@@ -21,63 +21,81 @@ import omari.hamza.storyview.model.MyStory
 import java.util.*
 
 
-class StoriesAdapter(val context: Context, val userName: String?) : ListAdapter<UserStatus,StoriesAdapter.StoriesViewHolder>(StoriesDiffUtil())
-{
-    inner class StoriesViewHolder(val binding : LayoutUserStoriesBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(context: Context, item: UserStatus){
-                binding.userName.text = item.name.toString()
-            binding.userStatusCircles.setPortionsColor(ResourcesCompat.getColor(context.resources, R.color.purple_200,null))
-                //show last updated
-                val time = getTime(item.lastUpdated!!)
-                binding.duration.text = time.toString()
-                // setup profile Image
-                Glide.with(context).load(Uri.parse(item.profileImage)).centerCrop().into(binding.userImage)
+class StoriesAdapter(val context: Context, val userName: String?) :
+    ListAdapter<UserStatus, StoriesAdapter.StoriesViewHolder>(StoriesDiffUtil()) {
+    inner class StoriesViewHolder(val binding: LayoutUserStoriesBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(context: Context, item: UserStatus) {
+            binding.userName.text = item.name.toString()
+            binding.userStatusCircles.setPortionsColor(ResourcesCompat.getColor(context.resources,
+                R.color.purple_200,
+                null))
+            //show last updated
+            val time = getTime(item.lastUpdated!!)
+            binding.duration.text = time.toString()
+            // setup profile Image
+            Glide.with(context).load(Uri.parse(item.profileImage)).centerCrop()
+                .into(binding.userImage)
             binding.userStatusCircles.setPortionsCount(item.status.size)
         }
 
     }
 
-    private fun getTime(lastUpdated: Long) :String {
+    private fun getTime(lastUpdated: Long): String {
         val cal = Calendar.getInstance()
         cal.timeZone = TimeZone.getTimeZone(cal.timeZone.toZoneId())
         cal.timeInMillis = lastUpdated!!
 
-        var att=""
+        var att = ""
         val tt = cal.get(Calendar.AM_PM)
-        att = if(tt==0) {
+        att = if (tt == 0) {
             "AM"
         } else {
             "PM"
         }
-        if( Calendar.getInstance().get(Calendar.HOUR_OF_DAY) - cal.get(Calendar.HOUR_OF_DAY) >= 12)
-        {
-            return String.format("%02d:%02d %s on %s" ,cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), att,cal.get(Calendar.DATE))
-        }else
-        {
-            return  String.format("today at %02d:%02d %s" ,cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), att)
+        if (Calendar.getInstance()
+                .get(Calendar.HOUR_OF_DAY) - cal.get(Calendar.HOUR_OF_DAY) >= 12
+        ) {
+            return String.format("%02d:%02d %s on %s",
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                att,
+                cal.get(Calendar.DATE))
+        } else {
+            return String.format("today at %02d:%02d %s",
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                att)
         }
 
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoriesViewHolder {
-        val binding = LayoutUserStoriesBinding.inflate(LayoutInflater.from(context),parent,false)
+        val binding = LayoutUserStoriesBinding.inflate(LayoutInflater.from(context), parent, false)
         return StoriesViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: StoriesViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(context,item)
+        holder.bind(context, item)
         val time = getTime(item.lastUpdated!!)
         holder.binding.userImage.setOnClickListener {
             // start story and turn down the border color
-            holder.binding.userStatusCircles.setPortionsColor(ResourcesCompat.getColor(context.resources, R.color.primary_color,null))
+            holder.binding.userStatusCircles.setPortionsColor(ResourcesCompat.getColor(context.resources,
+                R.color.primary_color,
+                null))
             val storyArray = ArrayList<MyStory>()
-            for(status in item.status){
-               val data =  MyStory(status.imageUrl,Date(status.timeStamp!!))
+            for (statuses in item.status) {
+                val data = MyStory(statuses.imageUrl, Date(statuses.timeStamp!!))
                 storyArray.add(data)
+                showStories(storyArray,
+                    holder.itemView.context,
+                    item.name!!,
+                    item.profileImage.toString(),
+                    time)
             }
-            showStories(storyArray,holder.itemView.context, item.name!!,item.profileImage.toString(),time)
+
         }
     }
 
@@ -86,7 +104,7 @@ class StoriesAdapter(val context: Context, val userName: String?) : ListAdapter<
         context: Context,
         name: String,
         userProfile: String,
-        time: String
+        time: String,
     ) {
         StoryView.Builder((FragmentComponentManager.findActivity(context) as Activity as FragmentActivity).supportFragmentManager)
             .setStoriesList(storyArray) // Required
@@ -105,15 +123,15 @@ class StoriesAdapter(val context: Context, val userName: String?) : ListAdapter<
             }) // Optional Listeners
             .build() // Must be called before calling show method
             .show()
-
     }
-
 
 }
 
-class StoriesDiffUtil : DiffUtil.ItemCallback<UserStatus>(){
+class StoriesDiffUtil : DiffUtil.ItemCallback<UserStatus>() {
     override fun areItemsTheSame(oldItem: UserStatus, newItem: UserStatus): Boolean {
-        return oldItem.lastUpdated == newItem.lastUpdated
+        return oldItem.lastUpdated == newItem.lastUpdated &&
+                oldItem.uploaderUid == newItem.uploaderUid &&
+                oldItem.status.size == newItem.status.size
     }
 
     override fun areContentsTheSame(oldItem: UserStatus, newItem: UserStatus): Boolean {

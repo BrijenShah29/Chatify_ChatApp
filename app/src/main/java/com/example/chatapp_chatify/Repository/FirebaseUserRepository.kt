@@ -9,6 +9,7 @@ import com.example.chatapp_chatify.DataClass.Users
 import com.example.chatapp_chatify.Repository.RepoInterface.FirebaseListenerRepository
 import com.example.chatapp_chatify.RoomDB.ChatifyDao
 import com.example.chatapp_chatify.utils.Constant
+import com.example.chatapp_chatify.utils.Constant.Companion.TAG
 import com.example.chatapp_chatify.utils.Constant.Companion.stories
 import com.google.firebase.auth.*
 import com.google.firebase.database.DataSnapshot
@@ -37,8 +38,8 @@ class FirebaseUserRepository @Inject constructor(
 
     var photoUploadStatus: FirebaseListenerRepository? = null
     var imageResponse = MutableLiveData<String>()
-    var imageLink : String? = null
-    fun uploadPhotoToFirebaseStorage(uri: Uri,fileName: String,path:String) {
+    var imageLink: String? = null
+    fun uploadPhotoToFirebaseStorage(uri: Uri, fileName: String, path: String) {
 
         val myRef = firebaseStorage.reference.child("$path/$fileName")
         myRef.putFile(uri)
@@ -84,8 +85,8 @@ class FirebaseUserRepository @Inject constructor(
 // UPLOAD USER PROFILE INTO FIREBASE
 
 
-   private var response = MutableLiveData<Boolean>()
-    fun uploadDataIntoFirebase(users: Users, path: String) : LiveData<Boolean> {
+    private var response = MutableLiveData<Boolean>()
+    fun uploadDataIntoFirebase(users: Users, path: String): LiveData<Boolean> {
         db.reference.child(path).child(users.phoneNumber!!).setValue(users).addOnSuccessListener {
             response?.value = true
         }
@@ -101,7 +102,7 @@ class FirebaseUserRepository @Inject constructor(
 
     private var userProfile = MutableLiveData<Users>()
 
-    fun fetchUserProfileFromFirebase(path: String,phoneNumber : String) : LiveData<Users>{
+    fun fetchUserProfileFromFirebase(path: String, phoneNumber: String): LiveData<Users> {
         db.reference.child(path).child(phoneNumber).get().addOnSuccessListener {
             userProfile?.value = it.getValue(Users::class.java)
         }
@@ -113,18 +114,19 @@ class FirebaseUserRepository @Inject constructor(
     // GETTING USERS INFO FROM FIREBASE
 
     private var _userData = MutableLiveData<ArrayList<Users>>()
-    private val userData : LiveData<ArrayList<Users>>
+    private val userData: LiveData<ArrayList<Users>>
         get() = _userData
-    fun getUserProfilesFromFirestore(path: String) : LiveData<ArrayList<Users>> {
+
+    fun getUserProfilesFromFirestore(path: String): LiveData<ArrayList<Users>> {
 
         val usersList = ArrayList<Users>()
-        db.reference.child(path).addValueEventListener(object  : ValueEventListener{
+        db.reference.child(path).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                for(snapshots in snapshot.children) {
+                for (snapshots in snapshot.children) {
                     val users = snapshots.getValue(Users::class.java)
                     usersList.add(users!!)
-                    Log.d("fetchedUsers",users?.name.toString())
+                    Log.d("fetchedUsers", users?.name.toString())
                 }
                 _userData.value?.clear()
                 _userData.value = usersList
@@ -132,7 +134,7 @@ class FirebaseUserRepository @Inject constructor(
 
 
             override fun onCancelled(error: DatabaseError) {
-               Log.d("UserProfileRetrieval","User data retrieval failed")
+                Log.d("UserProfileRetrieval", "User data retrieval failed")
             }
         })
 
@@ -140,13 +142,12 @@ class FirebaseUserRepository @Inject constructor(
     }
 
 
-
     // UPLOAD AUDIO TO FIREBASE
 
     var audioUploadStatus: FirebaseListenerRepository? = null
     private var audioResponse = MutableLiveData<String>()
 
-    fun uploadAudioToFirebaseStorage(uri: Uri,fileName: String,path:String) : LiveData<String> {
+    fun uploadAudioToFirebaseStorage(uri: Uri, fileName: String, path: String): LiveData<String> {
 
 
         val myRef = firebaseStorage.reference.child("$path/$fileName")
@@ -182,19 +183,24 @@ class FirebaseUserRepository @Inject constructor(
 
     private var statusReport = MutableLiveData<String>()
     fun deleteLastStory() {
-            db.reference.child("stories").child(auth.uid.toString()).child("status").child(stories.last().timeStamp.toString())
+        try {
+            db.reference.child("stories").child(auth.uid.toString()).child("status")
+                .child(stories.last().timeStamp.toString())
                 .removeValue()
+        } catch (e: Exception) {
+            Log.d(TAG, e.message.toString())
+        }
     }
 
     fun deleteAllStories() {
-        db.reference.child("stories").child(auth.uid.toString()).child("status").removeValue()
+        db.reference.child("stories").child(auth.uid.toString()).removeValue()
     }
 
     private var updateStatus = MutableLiveData<String>()
-    fun updateUserProfile(user: HashMap<String, Any>): MutableLiveData<String>
-    {
-        var status : String? = " "
-        db.reference.child("Users").child(auth.currentUser?.phoneNumber.toString()).updateChildren(user).addOnSuccessListener {
+    fun updateUserProfile(user: HashMap<String, Any>): MutableLiveData<String> {
+        var status: String? = " "
+        db.reference.child("Users").child(auth.currentUser?.phoneNumber.toString())
+            .updateChildren(user).addOnSuccessListener {
             status = Constant.SUCCESS_MESSAGE
         }
         updateStatus.value = status!!

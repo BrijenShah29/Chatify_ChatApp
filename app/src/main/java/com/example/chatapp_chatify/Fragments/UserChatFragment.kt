@@ -37,7 +37,7 @@ import com.example.chatapp_chatify.DataClass.MapsModel.Result
 import com.example.chatapp_chatify.DataClass.MessagesModel
 import com.example.chatapp_chatify.DataClass.Users
 import com.example.chatapp_chatify.MainActivity
-import com.example.chatapp_chatify.MapsFragment
+import com.example.chatapp_chatify.Fragments.LoginFragments.MapsFragment
 import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.ViewModel.FirebaseMessagesViewModel
 import com.example.chatapp_chatify.ViewModel.FirebaseViewModel
@@ -81,12 +81,13 @@ class UserChatFragment : Fragment() {
     private var isWriteExternalPermissionGranted = false
     private var isImageAboutToSend = false
 
-    private var mapsFragment : MapsFragment? = null
+    private var mapsFragment: MapsFragment? = null
 
 
-    private var permissions = arrayOf(Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private var permissions =
+        arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     val REQUEST_CODE = 111
-    private lateinit var permissionLauncher : ActivityResultLauncher<Array<String>>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     lateinit var binding: FragmentUserChatBinding
     lateinit var currentUser: Users
@@ -103,31 +104,31 @@ class UserChatFragment : Fragment() {
     lateinit var database: FirebaseDatabase
 
     @Inject
-    lateinit var firebaseStorage : FirebaseStorage
+    lateinit var firebaseStorage: FirebaseStorage
 
     private var senderRoom: String? = ""
     private var receiverRoom: String? = ""
-    private var oppositeUserToken : String? = ""
+    private var oppositeUserToken: String? = ""
 
-   private var imageLink = ""
+    private var imageLink = ""
 
     lateinit var messageList: List<MessagesModel>
 
-    private var messageLocation : String ? = null
+    private var messageLocation: String? = null
 
     private val viewModel by viewModels<FirebaseViewModel>()
     private val messageViewModel by viewModels<FirebaseMessagesViewModel>()
-    private var listening : Boolean = false
+    private var listening: Boolean = false
 
-    private lateinit var mediaRecorder : MediaRecorder
-    private var audioPath : String ? = ""
+    private lateinit var mediaRecorder: MediaRecorder
+    private var audioPath: String? = ""
 
 
-    private var clickedImageUri : Uri? = null
-    private var imageUri : Uri? = null
+    private var clickedImageUri: Uri? = null
+    private var imageUri: Uri? = null
 
-    private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()){
-        if(it){
+    private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+        if (it) {
             binding.imagePreview.setImageURI(null)
             binding.imagePreview.setImageURI(clickedImageUri)
             isImageAboutToSend = true
@@ -135,7 +136,7 @@ class UserChatFragment : Fragment() {
             binding.cancelImage.visibility = VISIBLE
             binding.recordButton.visibility = View.INVISIBLE
             binding.sendButton.visibility = VISIBLE
-        }else{
+        } else {
             binding.imagePreview.setImageURI(null)
             binding.sendImageLayout.visibility = GONE
             binding.cancelImage.visibility = GONE
@@ -146,8 +147,8 @@ class UserChatFragment : Fragment() {
     }
     private var launchGalleryForActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ){
-        if(it.resultCode == Activity.RESULT_OK){
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
             clickedImageUri = it.data!!.data
             binding.imagePreview.setImageURI(clickedImageUri)
             isImageAboutToSend = true
@@ -164,12 +165,13 @@ class UserChatFragment : Fragment() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_CODE){
-            isRecordPermissionGranted = grantResults[0] ==PackageManager.PERMISSION_GRANTED
-            isWriteExternalPermissionGranted = grantResults[1] ==PackageManager.PERMISSION_GRANTED
+        if (requestCode == REQUEST_CODE) {
+            isRecordPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            isWriteExternalPermissionGranted = grantResults[1] == PackageManager.PERMISSION_GRANTED
 
         }
     }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         val itemAudio: MenuItem = menu.findItem(R.id.audioCall_appBar)
         val itemVideo: MenuItem = menu.findItem(R.id.videoCall_appBar)
@@ -182,7 +184,7 @@ class UserChatFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        if(requireArguments().getString("senderRoom")!=null){
+        if (requireArguments().getString("senderRoom") != null) {
             senderRoom = requireArguments().getString("senderRoom")
             messageViewModel.startListeningToMessages(senderRoom!!)
 
@@ -215,11 +217,11 @@ class UserChatFragment : Fragment() {
 
         val appbar = binding.appBar
 
-    // (requireActivity() as AppCompatActivity).setSupportActionBar(appbar)
+        // (requireActivity() as AppCompatActivity).setSupportActionBar(appbar)
 
-        val actionbar =  (requireActivity() as AppCompatActivity).supportActionBar
+        val actionbar = (requireActivity() as AppCompatActivity).supportActionBar
 
-      actionbar?.setDisplayHomeAsUpEnabled(true)
+        actionbar?.setDisplayHomeAsUpEnabled(true)
 
         binding.attachmentPopup.visibility = GONE
         binding.sendImageLayout.visibility = GONE
@@ -227,10 +229,12 @@ class UserChatFragment : Fragment() {
 
         messageList = ArrayList()
 
-        isRecordPermissionGranted = ActivityCompat.checkSelfPermission(requireContext(),permissions[0]) == PackageManager.PERMISSION_GRANTED
-        isWriteExternalPermissionGranted = ActivityCompat.checkSelfPermission(requireContext(),permissions[1]) == PackageManager.PERMISSION_GRANTED
-        if(!isRecordPermissionGranted){
-            ActivityCompat.requestPermissions(requireActivity(),permissions,REQUEST_CODE)
+        isRecordPermissionGranted = ActivityCompat.checkSelfPermission(requireContext(),
+            permissions[0]) == PackageManager.PERMISSION_GRANTED
+        isWriteExternalPermissionGranted = ActivityCompat.checkSelfPermission(requireContext(),
+            permissions[1]) == PackageManager.PERMISSION_GRANTED
+        if (!isRecordPermissionGranted) {
+            ActivityCompat.requestPermissions(requireActivity(), permissions, REQUEST_CODE)
         }
 
         val senderId = auth.currentUser?.uid.toString()
@@ -244,7 +248,7 @@ class UserChatFragment : Fragment() {
         receiverRoom = receiverId + senderId
 
         // START LISTENING TO CHAT
-        if(!listening){
+        if (!listening) {
             messageViewModel.startListeningToMessages(senderRoom!!)
 
         }
@@ -252,70 +256,51 @@ class UserChatFragment : Fragment() {
 
         messageViewModel.startListeningToUserPresence(receiverId)
 
-        messageViewModel.startListeningToUserPresence.observe(viewLifecycleOwner, androidx.lifecycle.Observer{
-            Log.d("MainScreen",it.toString())
+        messageViewModel.startListeningToUserPresence.observe(viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                Log.d("MainScreen", it.toString())
 
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(500)
-                if (it != null && it.toInt() != 3) {
-                    if (it.toInt() == Constant.USER_ONLINE) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(500)
+                    if (it != null && it.toInt() != 3) {
+                        if (it.toInt() == Constant.USER_ONLINE) {
+                            try {
+                                (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image)
+                                    .setImageDrawable(ResourcesCompat.getDrawable(
+                                        resources,
+                                        R.drawable.user_online,
+                                        null))
+                            } catch (e: Exception) {
+                                Log.d(TAG, e.message.toString())
+                            }
+
+                            Log.d("MainScreen", it.toString())
+
+                        } else if (it.toInt() == Constant.USER_OFFLINE) {
+                            try {
+                                (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image)
+                                    .setImageDrawable(ResourcesCompat.getDrawable(
+                                        resources,
+                                        R.drawable.user_offline,
+                                        null))
+                            } catch (e: Exception) {
+                                Log.d(TAG, e.message.toString())
+                            }
+                        }
+                    } else {
                         try {
-                            (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image).setImageDrawable(ResourcesCompat.getDrawable(
-                                resources,
-                                R.drawable.user_online,
-                               null))
+                            (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image)
+                                .setImageDrawable(ResourcesCompat.getDrawable(
+                                    resources,
+                                    R.drawable.user_offline,
+                                    null))
                         } catch (e: Exception) {
-                            Log.d(TAG,e.message.toString())
+                            Log.d(TAG, e.message.toString())
                         }
 
-                        Log.d("MainScreen",it.toString())
-
-                    } else if (it.toInt() == Constant.USER_OFFLINE) {
-                        try {
-                            (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image).setImageDrawable(ResourcesCompat.getDrawable(
-                                resources,
-                                R.drawable.user_offline,
-                                null))
-                        } catch (e: Exception) {
-                            Log.d(TAG,e.message.toString())
-                        }
                     }
-                } else {
-                    try {
-                        (requireActivity() as MainActivity).findViewById<ImageView>(R.id.online_status_image).setImageDrawable(ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.user_offline,
-                            null))
-                    } catch (e: Exception) {
-                        Log.d(TAG,e.message.toString())
-                    }
-
                 }
-            }
-        })
-
-
-
-
-//        messageViewModel.startListeningToUserPresence(receiverId)
-//        messageViewModel.startListeningToUserPresence.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            val status = requireActivity().findViewById<ImageView>(R.id.online_status_image)
-//            if(it!=null && it!=3)
-//            {
-//                if(it.equals(Constant.USER_ONLINE)){
-//                    status.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.user_online,null))
-//
-//                }else if(it.equals(Constant.USER_OFFLINE)){
-//
-//                    status.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.user_offline,null))
-//                }
-//            }else
-//            {
-//                Log.d(TAG,"Status unknown")
-//            }
-//        })
-
-
+            })
 
 
         // SETTING UP THE MESSAGE REACTION
@@ -333,10 +318,9 @@ class UserChatFragment : Fragment() {
         // SETTING UP CAMERA BUTTON ON CLICK EVENT
         clickedImageUri = createImageUri()
         binding.attachmentCamera.setOnClickListener {
-            if(clickedImageUri!=null){
+            if (clickedImageUri != null) {
                 contract.launch(clickedImageUri)
-            }else
-            {
+            } else {
                 clickedImageUri = createImageUri()
                 contract.launch(clickedImageUri)
             }
@@ -344,7 +328,7 @@ class UserChatFragment : Fragment() {
         }
 
         binding.cancelImage.setOnClickListener {
-            Log.d("cancel image","cancel image clicked")
+            Log.d("cancel image", "cancel image clicked")
             clickedImageUri = null
             Toast.makeText(requireContext(), "Image Removed.", Toast.LENGTH_SHORT).show()
             binding.imagePreview.setImageURI(null)
@@ -356,86 +340,80 @@ class UserChatFragment : Fragment() {
 
         //GETTING DATA FROM LOCAL CACHE FIRST
         messageViewModel.fetchMessagesForOffLine(senderRoom!!)
-        messageViewModel.fetchedLocalCacheMessages.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if(!it.isNullOrEmpty())
-            {
-                messageList = it
-            }
+        messageViewModel.fetchedLocalCacheMessages.observe(viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                if (!it.isNullOrEmpty()) {
+                    messageList = it
+                }
             })
 
         //SETTING UP THE RECYCLERVIEW AND ADAPTER
-       // messageViewModel.getMessages(senderRoom!!)
-        adapter = MessagesAdapter(requireContext(), senderRoom!!, receiverRoom!!, db, config,auth)
+        // messageViewModel.getMessages(senderRoom!!)
+        adapter = MessagesAdapter(requireContext(), senderRoom!!, receiverRoom!!, db, config, auth)
         binding.chatRecyclerview.adapter = adapter
         binding.chatRecyclerview.scrollToPosition(messageList.size)
 
-            // GETTING DATA FROM FIREBASE IF THERE'S ANY UPDATE IN MESSAGE
-        messageViewModel.startListeningToMessages.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-               if(it.isNullOrEmpty()){
-                   binding.progressBar.visibility = GONE
-                   binding.chatRecyclerview.smoothScrollToPosition(adapter.itemCount)
-                   adapter.submitList(messageList)
-                   adapter.notifyDataSetChanged()
-               }else {
-                binding.progressBar.visibility = GONE
-            Log.d("receivedChatMain",it.get(0).toString())
-                   binding.chatRecyclerview.smoothScrollToPosition(it.size - 1)
-                   adapter.submitList(it.toList())
-                   adapter.notifyDataSetChanged()
+        // GETTING DATA FROM FIREBASE IF THERE'S ANY UPDATE IN MESSAGE
+        messageViewModel.startListeningToMessages.observe(viewLifecycleOwner,
+            androidx.lifecycle.Observer {
+                if (it.isNullOrEmpty()) {
+                    binding.progressBar.visibility = GONE
+                    binding.chatRecyclerview.smoothScrollToPosition(adapter.itemCount)
+                    adapter.submitList(messageList)
+                    adapter.notifyDataSetChanged()
+                } else {
+                    binding.progressBar.visibility = GONE
+                    binding.chatRecyclerview.smoothScrollToPosition(it.size - 1)
+                    adapter.submitList(it.toList())
+                    adapter.notifyDataSetChanged()
 
-               }
-        })
+                }
+            })
 
         binding.sendButton.setOnClickListener {
 
-            Log.d("sentButtonClicked","SendButtonClicked")
-            if(isImageAboutToSend && binding.sendImageLayout.visibility == VISIBLE)
-            {
+            Log.d("sentButtonClicked", "SendButtonClicked")
+            if (isImageAboutToSend && binding.sendImageLayout.visibility == VISIBLE) {
                 // upload Image to firebase & get the link and fetch the link
                 // Uri.parse(userManager.getUserProfileImage())
                 binding.progressBar.visibility = VISIBLE
-                val fileName = auth.currentUser?.uid.toString()+ System.currentTimeMillis() + ".png"
-                messageViewModel.addImageMessageToFirebaseStorage(clickedImageUri!!,fileName,"Images/Message")
-                messageViewModel.imageMessageUrl.observe(viewLifecycleOwner, androidx.lifecycle.Observer { link->
+                val fileName =
+                    auth.currentUser?.uid.toString() + System.currentTimeMillis() + ".png"
+                messageViewModel.addImageMessageToFirebaseStorage(clickedImageUri!!,
+                    fileName,
+                    "Images/Message")
+                messageViewModel.imageMessageUrl.observe(viewLifecycleOwner,
+                    androidx.lifecycle.Observer { link ->
 
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(1000)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(1000)
 
-                        if(link.isNotEmpty()&& link!=imageLink)
-                        {
-                            clickedImageUri = null
-                            binding.imagePreview.setImageURI(null)
-                            binding.sendImageLayout.visibility = GONE
-                            binding.cancelImage.visibility = GONE
-                            binding.recordButton.visibility = VISIBLE
-                            binding.sendButton.visibility = View.INVISIBLE
-                            isImageAboutToSend = false
-                            // send the fetched link to message
-                            Log.d("ImageUrlFromFirebase","ImageUrlFromFirebase")
-                            sendImageMessage(senderId,link)
-                            imageLink = link
+                            if (link.isNotEmpty() && link != imageLink) {
+                                clickedImageUri = null
+                                binding.imagePreview.setImageURI(null)
+                                binding.sendImageLayout.visibility = GONE
+                                binding.cancelImage.visibility = GONE
+                                binding.recordButton.visibility = VISIBLE
+                                binding.sendButton.visibility = View.INVISIBLE
+                                isImageAboutToSend = false
+                                // send the fetched link to message
+                                sendImageMessage(senderId, link)
+                                imageLink = link
+                            } else {
+                                Log.d("ImageUrlFromFirebase", "Link is empty")
+                            }
                         }
-                        else
-                        {
-                            Log.d("ImageUrlFromFirebase","Link is empty")
-                        }
-                    }
-                })
-            }
-            else if(binding.messageInput.text.trim().isNotEmpty())
-            {
-                if(binding.messageInput.text.toString() == messageLocation)
-                {
-                    sendTextMessage(senderId,messageLocation!!,Constant.MESSAGE_TYPE_LOCATION)
+                    })
+            } else if (binding.messageInput.text.trim().isNotEmpty()) {
+                if (binding.messageInput.text.toString() == messageLocation) {
+                    sendTextMessage(senderId, messageLocation!!, Constant.MESSAGE_TYPE_LOCATION)
+                } else {
+                    sendTextMessage(senderId,
+                        binding.messageInput.text.toString(),
+                        Constant.MESSAGE_TYPE_TEXT)
                 }
-                else
-                {
-                    sendTextMessage(senderId,binding.messageInput.text.toString(),Constant.MESSAGE_TYPE_TEXT)
-                }
-            }
-            else
-            {
-                Snackbar.make(requireView(),"Please write a message", Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(requireView(), "Please write a message", Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -450,19 +428,17 @@ class UserChatFragment : Fragment() {
 
         // SETTING UP TEXT WATCHER
 
-        binding.messageInput.addTextChangedListener(object : TextWatcher{
+        binding.messageInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(p0.toString().trim().isNotEmpty()) {
+                if (p0.toString().trim().isNotEmpty()) {
 
                     binding.chatBottomLayout.visibility = VISIBLE
                     binding.recordButton.visibility = GONE
                     binding.sendButton.visibility - VISIBLE
-                }
-                else
-                {
+                } else {
                     binding.chatBottomLayout.visibility = VISIBLE
                     binding.recordButton.visibility = VISIBLE
                     binding.sendButton.visibility - GONE
@@ -471,14 +447,12 @@ class UserChatFragment : Fragment() {
 
             override fun afterTextChanged(p0: Editable?) {
 
-                if(p0.toString().trim().isNotEmpty()) {
+                if (p0.toString().trim().isNotEmpty()) {
 
                     binding.chatBottomLayout.visibility = VISIBLE
                     binding.recordButton.visibility = GONE
                     binding.sendButton.visibility - VISIBLE
-                }
-                else
-                {
+                } else {
                     binding.chatBottomLayout.visibility = VISIBLE
                     binding.recordButton.visibility = VISIBLE
                     binding.sendButton.visibility - GONE
@@ -500,33 +474,26 @@ class UserChatFragment : Fragment() {
 
         binding.sendLocationButton.setOnClickListener {
             val bundle = Bundle()
-            bundle.putParcelable("UserData",currentUser)
-            Navigation.findNavController(requireView()).navigate(R.id.action_userChatFragment_to_mapsFragment,bundle)
+            bundle.putParcelable("UserData", currentUser)
+            Navigation.findNavController(requireView())
+                .navigate(R.id.action_userChatFragment_to_mapsFragment, bundle)
         }
         // GETTING MAPS DATA
-        if(requireArguments().getParcelable<Result>("Location") != null)
-        {
+        if (requireArguments().getParcelable<Result>("Location") != null) {
             val result = requireArguments().getParcelable<Result>("Location")
             val placeTitle = result?.name.toString()
             val placeAddress = result?.formatted_address.toString()
             val lat = result?.geometry?.location?.lat
             val lng = result?.geometry?.location?.lng
-            val latLng : LatLng = LatLng(lat!!,lng!!)
+            val latLng: LatLng = LatLng(lat!!, lng!!)
             messageLocation = "${latLng.toString()} & \n$placeTitle & \n$placeAddress"
-            Log.d("FetchedLocationFromMapOnCreate",messageLocation.toString())
+            Log.d("FetchedLocationFromMapOnCreate", messageLocation.toString())
             binding.messageInput.setText(" ")
             binding.messageInput.setText(messageLocation)
         }
 
         // GETTING MAPS DATA WITH INTERFACE
-//        mapsFragment?.setOnLocationSelectedListener(object : OnLocationSelectedListener{
-//            override fun onItemSelected(result: Result) {
-//
-//
-//
-//
-//            }
-//        })
+
 
         // SETTING UP RECORDING
         mediaRecorder = MediaRecorder()
@@ -535,15 +502,14 @@ class UserChatFragment : Fragment() {
 
         binding.recordButton.setOnClickListener { view ->
 
-           if(!isRecordPermissionGranted || !isWriteExternalPermissionGranted){
-               ActivityCompat.requestPermissions(requireActivity(),permissions,REQUEST_CODE)
-               mediaRecorder = MediaRecorder()
+            if (!isRecordPermissionGranted || !isWriteExternalPermissionGranted) {
+                ActivityCompat.requestPermissions(requireActivity(), permissions, REQUEST_CODE)
+                mediaRecorder = MediaRecorder()
 
-           }else
-           {
-               binding.recordButton.isListenForRecord = true
+            } else {
+                binding.recordButton.isListenForRecord = true
 
-           }
+            }
 
             binding.recordView.setOnRecordListener(object : OnRecordListener {
                 override fun onStart() {
@@ -562,38 +528,39 @@ class UserChatFragment : Fragment() {
                         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
                         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB) // NEED TO CHECK AT RUN TIME
 
-                        val file = File(Environment.getExternalStorageDirectory().absolutePath, "chatapp_chatify")
-                        if (!file.exists())
-                        {
+                        val file = File(Environment.getExternalStorageDirectory().absolutePath,
+                            "chatapp_chatify")
+                        if (!file.exists()) {
                             file.mkdirs()
-                            audioPath = file.absolutePath + File.separator + System.currentTimeMillis() + ".3gp"
-                            mediaRecorder.setOutputFile(audioPath)
-                        try {
-                            mediaRecorder.prepare()
-                            mediaRecorder.start()
-                        }
-                        catch (e: IOException) {
-                                e.printStackTrace()
-                            }
-
-                            binding.chatBottomLayout.visibility = GONE
-                            binding.recordView.visibility = VISIBLE
-                            binding.recordButton.visibility = VISIBLE
-                        }
-                        else
-                        {
-                            file.delete()
-                            file.mkdirs()
-                            audioPath = file.absolutePath+File.separator+System.currentTimeMillis()+".3gp"
+                            audioPath =
+                                file.absolutePath + File.separator + System.currentTimeMillis() + ".3gp"
                             mediaRecorder.setOutputFile(audioPath)
                             try {
                                 mediaRecorder.prepare()
                                 mediaRecorder.start()
-                            }
-                            catch (e: IOException) {
+                            } catch (e: IOException) {
                                 e.printStackTrace()
                             }
-                            binding.chatBottomLayout.visibility = GONE
+                            binding.messageInput.visibility = GONE
+                            binding.attachmentCamera.visibility = GONE
+                            binding.recordLayout.visibility = VISIBLE
+                            binding.recordView.visibility = VISIBLE
+                            binding.recordButton.visibility = VISIBLE
+                        } else {
+                            file.delete()
+                            file.mkdirs()
+                            audioPath =
+                                file.absolutePath + File.separator + System.currentTimeMillis() + ".3gp"
+                            mediaRecorder.setOutputFile(audioPath)
+                            try {
+                                mediaRecorder.prepare()
+                                mediaRecorder.start()
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                            binding.messageInput.visibility = GONE
+                            binding.attachmentCamera.visibility = GONE
+                            binding.recordLayout.visibility = VISIBLE
                             binding.recordView.visibility = VISIBLE
                             binding.recordButton.visibility = VISIBLE
                         }
@@ -601,6 +568,7 @@ class UserChatFragment : Fragment() {
 
                     }
                 }
+
                 override fun onCancel() {
                     //On Swipe To Cancel
                     Log.d("RecordView", "onCancel")
@@ -619,7 +587,9 @@ class UserChatFragment : Fragment() {
                         }
                     }
 
-                    binding.recordView.visibility = GONE
+                    binding.recordLayout.visibility = GONE
+                    binding.messageInput.visibility = VISIBLE
+                    binding.attachmentCamera.visibility = VISIBLE
                     binding.chatBottomLayout.visibility = VISIBLE
 
 
@@ -628,20 +598,23 @@ class UserChatFragment : Fragment() {
                 override fun onFinish(recordTime: Long, limitReached: Boolean) {
                     //Stop Recording..
                     //limitReached to determine if the Record was finished when time limit reached.
+                    binding.recordView.visibility = GONE
+                    binding.messageInput.visibility = View.VISIBLE
+                    binding.chatBottomLayout.visibility = VISIBLE
+                    binding.attachmentCamera.visibility = VISIBLE
+                    binding.chatBottomLayout.visibility = VISIBLE
 
                     Log.d("RecordView", "onFinish")
                     try {
                         mediaRecorder.reset()
                         mediaRecorder.release()
-                    }
-                     catch (e: IOException) {
+                    } catch (e: IOException) {
                         e.printStackTrace()
                     }
-                    binding.recordView.visibility = GONE
-                    binding.chatBottomLayout.visibility = VISIBLE
+
 
                     // upload file to firebase Storage
-                        sendRecordingFile(senderId)
+                    sendRecordingFile(senderId)
 
 
                 }
@@ -665,6 +638,8 @@ class UserChatFragment : Fragment() {
 
                     binding.recordView.visibility = GONE
                     binding.chatBottomLayout.visibility = VISIBLE
+                    binding.attachmentCamera.visibility = VISIBLE
+                    binding.chatBottomLayout.visibility = VISIBLE
                 }
 
                 override fun onLock() {
@@ -679,11 +654,9 @@ class UserChatFragment : Fragment() {
         }
 
 
-
-
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             isEnabled = true
-            if (binding.attachmentPopup.visibility == VISIBLE || binding.sendImageLayout.visibility== VISIBLE) {
+            if (binding.attachmentPopup.visibility == VISIBLE || binding.sendImageLayout.visibility == VISIBLE) {
                 binding.attachmentPopup.visibility = GONE
                 binding.sendImageLayout.visibility = GONE
                 clickedImageUri = null
@@ -697,7 +670,7 @@ class UserChatFragment : Fragment() {
 
 
 
-        mapsFragment?.setOnLocationSelectedListener(object : OnLocationSelectedListener{
+        mapsFragment?.setOnLocationSelectedListener(object : OnLocationSelectedListener {
             override fun onLocationSelected(location: Result) {
                 val placeTitle = location.name.toString()
                 val placeAddress = location.formatted_address.toString()
@@ -709,6 +682,12 @@ class UserChatFragment : Fragment() {
 
         })
 
+        binding.sendVideoButton.setOnClickListener {
+            Snackbar.make(requireView(),
+                "Video Sharing Currently Unavailable",
+                Snackbar.LENGTH_SHORT).show()
+        }
+
         return binding.root
 
     }
@@ -719,7 +698,13 @@ class UserChatFragment : Fragment() {
         val lastMessageData: HashMap<String, Any> = HashMap<String, Any>()
         val timestamp = Calendar.getInstance().time.time
 
-        val data = MessagesModel(randomKey, messageText, senderId, timestamp, 6,senderRoom,Constant.MESSAGE_TYPE_IMAGE)
+        val data = MessagesModel(randomKey,
+            messageText,
+            senderId,
+            timestamp,
+            6,
+            senderRoom,
+            Constant.MESSAGE_TYPE_IMAGE)
 
         lastMessageData["LastMessage"] = "Photo"
         lastMessageData["LastMessageTime"] = data.timestamp!!
@@ -735,17 +720,22 @@ class UserChatFragment : Fragment() {
     }
 
 
-    private fun sendTextMessage(senderId: String, messageText : String,MESSAGE_TYPE_TEXT : Int) {
+    private fun sendTextMessage(senderId: String, messageText: String, MESSAGE_TYPE_TEXT: Int) {
 
         val randomKey = database.reference.push().key.toString()
         val lastMessageData: HashMap<String, Any> = HashMap<String, Any>()
 
         if (binding.messageInput.text.isNotEmpty()) {
 
-            if(MESSAGE_TYPE_TEXT != Constant.MESSAGE_TYPE_LOCATION)
-            {
+            if (MESSAGE_TYPE_TEXT != Constant.MESSAGE_TYPE_LOCATION) {
                 val timestamp = Calendar.getInstance().time.time
-                val data = MessagesModel(randomKey, messageText, senderId, timestamp, 6,senderRoom,Constant.MESSAGE_TYPE_TEXT)
+                val data = MessagesModel(randomKey,
+                    messageText,
+                    senderId,
+                    timestamp,
+                    6,
+                    senderRoom,
+                    Constant.MESSAGE_TYPE_TEXT)
                 binding.messageInput.setText("")
 
                 lastMessageData["LastMessage"] = messageText
@@ -760,22 +750,25 @@ class UserChatFragment : Fragment() {
                     requireContext(),
                     currentUser.token,
                     userManager.getUserName())
+            } else {
+                sendLocationMessage(randomKey, senderId, messageText)
             }
-            else
-            {
-                sendLocationMessage(randomKey,senderId,messageText)
-            }
-            }
-            //val messageText = binding.messageInput.text.toString()
-
-
-
         }
+        //val messageText = binding.messageInput.text.toString()
+
+
+    }
 
     private fun sendLocationMessage(randomKey: String, senderId: String, messageText: String) {
         val lastMessageData: HashMap<String, Any> = HashMap<String, Any>()
         val timestamp = Calendar.getInstance().time.time
-        val data = MessagesModel(randomKey,messageText, senderId, timestamp, 6,senderRoom,Constant.MESSAGE_TYPE_LOCATION)
+        val data = MessagesModel(randomKey,
+            messageText,
+            senderId,
+            timestamp,
+            6,
+            senderRoom,
+            Constant.MESSAGE_TYPE_LOCATION)
         binding.messageInput.setText("")
 
         lastMessageData["LastMessage"] = "\uD83D\uDCCD Location"
@@ -793,28 +786,20 @@ class UserChatFragment : Fragment() {
     }
 
     private fun createImageUri(): Uri? {
-        val image = File(requireActivity().applicationContext.filesDir,"chatify_photo.png")
+        val image = File(requireActivity().applicationContext.filesDir, "chatify_photo.png")
         return FileProvider.getUriForFile(requireActivity().applicationContext,
             "com.example.chatapp_chatify.fileProvider",
-        image)
+            image)
     }
 
-    private fun createRecordingFile()
-    {
+    private fun createRecordingFile() {
 
     }
 
     private fun sendRecordingFile(senderId: String) {
         val audioFile = Uri.fromFile(File(audioPath))
         var audioUrl: String = ""
-//        messageViewModel.addRecordingMessageToFirebaseStorage(audioFile,audioPath!!,"AudioRecordings")
-//      messageViewModel.recodingMessageUrl.observe(viewLifecycleOwner, androidx.lifecycle.Observer { path->
-//          if(!path.isNullOrEmpty()){
-//               val audioUrl = path.toString()
-//               Log.d("audio uploaded",path.toString())
-////                // Send Path as a Message in Firebase Database
-//          }
-//        })
+
 
         val myRef = firebaseStorage.reference.child("AudioRecordings/$audioPath")
 
@@ -826,18 +811,24 @@ class UserChatFragment : Fragment() {
                     throw it
                 }
             }
-            myRef.downloadUrl }.addOnCompleteListener {
-                task->
-            if(task.isSuccessful){
+            myRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
                 val downloadUri = task.result
-                Log.d("Audio Uploaded",downloadUri.toString())
+                Log.d("Audio Uploaded", downloadUri.toString())
                 // URI successfully received now upload it to Firebase
 
                 val randomKey = database.reference.push().key.toString()
                 val lastMessageData: HashMap<String, Any> = HashMap<String, Any>()
                 val timestamp = Calendar.getInstance().time.time
 
-                val data = MessagesModel(randomKey, downloadUri.toString(), senderId, timestamp, 6,senderRoom,Constant.MESSAGE_TYPE_AUDIO)
+                val data = MessagesModel(randomKey,
+                    downloadUri.toString(),
+                    senderId,
+                    timestamp,
+                    6,
+                    senderRoom,
+                    Constant.MESSAGE_TYPE_AUDIO)
 
                 lastMessageData["LastMessage"] = "Audio"
                 lastMessageData["LastMessageTime"] = timestamp
@@ -847,92 +838,76 @@ class UserChatFragment : Fragment() {
                     lastMessageData,
                     data,
                     requireContext(),
-                    currentUser.token,userManager.getUserName())
+                    currentUser.token, userManager.getUserName())
 
-            }else
-            {
-                Log.d("failed audio upload","Audio upload failed")
+            } else {
+                Log.d("failed audio upload", "Audio upload failed")
             }
         }
-//***************************************************************************************************************
-//                myRef.downloadUrl
-//                    .addOnSuccessListener {
-//                        audioUrl = it.toString()
-//                    }
-//                    .addOnFailureListener {
-//
-//                        Log.d("failed audio path","Audio path fetching failed")
-//
-//                    }
-//                    .addOnFailureListener {
-//                        Log.d("failed audio upload","Audio upload failed")
-//                    }
+
     }
 
     override fun onResume() {
         super.onResume()
         val currentUserId = auth.currentUser?.uid
-        Log.d("FetchedLocationFromMap",messageLocation.toString())
-        database.reference.child("presence").child(currentUserId.toString()).setValue(Constant.USER_ONLINE)
+        Log.d("FetchedLocationFromMap", messageLocation.toString())
+        database.reference.child("presence").child(currentUserId.toString())
+            .setValue(Constant.USER_ONLINE)
     }
-        override fun onPause() {
+
+    override fun onPause() {
         super.onPause()
         messageViewModel.addPreviousMessagesToLocalCache()
-            val currentUserId = auth.currentUser?.uid
-            database.reference.child("presence").child(currentUserId.toString()).setValue(Constant.USER_OFFLINE)
+        val currentUserId = auth.currentUser?.uid
+        database.reference.child("presence").child(currentUserId.toString())
+            .setValue(Constant.USER_OFFLINE)
     }
 
     override fun onStop() {
         val currentUserId = auth.currentUser?.uid
-        database.reference.child("presence").child(currentUserId.toString()).setValue(Constant.USER_OFFLINE)
+        database.reference.child("presence").child(currentUserId.toString())
+            .setValue(Constant.USER_OFFLINE)
         super.onStop()
     }
+
     override fun onDestroyView() {
         messageViewModel.addPreviousMessagesToLocalCache()
         super.onDestroyView()
     }
 
-      fun sendNotificationsWithVolley(name : String, message:String, token :String)
-      {
-          val queue  = Volley.newRequestQueue(requireContext())
-          val url = "https://fcm.googleapis.com/fcm/send"
-          val data = JSONObject()
-          data.put("title",name)
-          data.put("body",message)
+    fun sendNotificationsWithVolley(name: String, message: String, token: String) {
+        val queue = Volley.newRequestQueue(requireContext())
+        val url = "https://fcm.googleapis.com/fcm/send"
+        val data = JSONObject()
+        data.put("title", name)
+        data.put("body", message)
 
-          val notificationData = JSONObject()
-          notificationData.put("notification",data)
-          notificationData.put("to",data)
+        val notificationData = JSONObject()
+        notificationData.put("notification", data)
+        notificationData.put("to", data)
 
 
-          val request: JsonObjectRequest =
-              object : JsonObjectRequest(url, notificationData, Response.Listener {
-                  // Toast.makeText(ChatActivity.this, "success", Toast.LENGTH_SHORT).show();
-              },
-                  Response.ErrorListener { error ->
-                      Toast.makeText(requireContext(),
-                          error.localizedMessage,
-                          Toast.LENGTH_SHORT).show()
-                  }) {
-                  @Throws(AuthFailureError::class)
-                  override fun getHeaders(): Map<String, String> {
-                      val map: HashMap<String, String> = HashMap()
-                      val key = "key=AAAAWPeoLoE:APA91bGbmASsFPDVR3T47jKtHyug_GhIfbx15dJWp_y-q2yWFLGUZtmRALpl88VfWZ7KEdYJfM6W-jG6gW_yYTNZ7rTgOdr4juv3xLpnnfRpd4-q0--vrIAQIIqqZd6XoyAQY3rgeguH"
-                      map["Content-Type"] = "application/json"
-                      map["Authorization"] = key
-                      return map
-                  }
-              }
-          queue.add(request)
-      }
+        val request: JsonObjectRequest =
+            object : JsonObjectRequest(url, notificationData, Response.Listener {
+                // Toast.makeText(ChatActivity.this, "success", Toast.LENGTH_SHORT).show();
+            },
+                Response.ErrorListener { error ->
+                    Toast.makeText(requireContext(),
+                        error.localizedMessage,
+                        Toast.LENGTH_SHORT).show()
+                }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): Map<String, String> {
+                    val map: HashMap<String, String> = HashMap()
+                    val key =
+                        "key=AAAAWPeoLoE:APA91bGbmASsFPDVR3T47jKtHyug_GhIfbx15dJWp_y-q2yWFLGUZtmRALpl88VfWZ7KEdYJfM6W-jG6gW_yYTNZ7rTgOdr4juv3xLpnnfRpd4-q0--vrIAQIIqqZd6XoyAQY3rgeguH"
+                    map["Content-Type"] = "application/json"
+                    map["Authorization"] = key
+                    return map
+                }
+            }
+        queue.add(request)
+    }
 
-//    override fun onLocationSelected(location: Result) {
-//        val placeTitle = location.name
-//        val placeAddress = location.formatted_address
-//        messageLocation = "${latLng.toString()} & \n$placeTitle & \n$placeAddress"
-//        Log.d("FetchedLocationFromMap",messageLocation.toString())
-//        binding.messageInput.setText(" ")
-//        binding.messageInput.setText(messageLocation)
-//    }
 
 }

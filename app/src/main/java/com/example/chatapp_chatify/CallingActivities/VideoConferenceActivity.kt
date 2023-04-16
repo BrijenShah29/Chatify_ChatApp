@@ -302,6 +302,7 @@ class VideoConferenceActivity : AppCompatActivity() {
         super.onPause()
         Thread{
             viewModel.deleteLastSentToken(currentReceiverUser?.uid.toString(),auth.currentUser?.uid.toString())
+            database.reference.child("Chats").child("Calls").child(auth.currentUser?.uid.toString()).removeValue()
         }.start()
     }
     override fun onDestroy() {
@@ -312,6 +313,7 @@ class VideoConferenceActivity : AppCompatActivity() {
             RtcEngine.destroy()
             agoraEngine = null
             database.reference.child("Chats").child("Calls").child(currentReceiverUser?.uid.toString()).child(auth.currentUser?.uid.toString()).removeValue()
+            database.reference.child("Chats").child("Calls").child(auth.currentUser?.uid.toString()).removeValue()
         }.start()
 
     }

@@ -12,36 +12,30 @@ import retrofit2.Retrofit
 import java.net.URL
 import javax.inject.Inject
 
-class MapsGoogleRepository @Inject constructor(val retrofit: Retrofit, val mapsGoogleAPI: MapsGoogleAPI) {
+class MapsGoogleRepository @Inject constructor(
+    val retrofit: Retrofit,
+    val mapsGoogleAPI: MapsGoogleAPI,
+) {
 
     val data = MutableLiveData<PlacesMarkListModel>()
-    fun getMapsLocation(url: String)
-    {
-        mapsGoogleAPI.getNearbyPlaces(url).enqueue(object :Callback<PlacesMarkListModel>{
+    fun getMapsLocation(url: String) {
+        mapsGoogleAPI.getNearbyPlaces(url).enqueue(object : Callback<PlacesMarkListModel> {
             override fun onResponse(
                 call: Call<PlacesMarkListModel>,
                 response: Response<PlacesMarkListModel>,
             ) {
-                if(response.isSuccessful)
-                {
+                if (response.isSuccessful) {
                     data.value = response.body()
 
-//                    for(i in 0 until response.body()!!.results.size)
-//                    {
-//                        val googlePlace = response.body()!!.results[i]
-//
-//                    }
-                }
-                else
-                {
-                    Log.d(TAG,"Response is not successful")
+                } else {
+                    Log.d(TAG, "Response is not successful")
                 }
 
 
             }
 
             override fun onFailure(call: Call<PlacesMarkListModel>, t: Throwable) {
-                Log.d(TAG,"Response is not successful")
+                Log.d(TAG, "Response is not successful")
 
             }
 

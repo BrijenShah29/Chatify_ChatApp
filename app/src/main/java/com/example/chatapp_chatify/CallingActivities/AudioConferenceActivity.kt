@@ -259,6 +259,7 @@ class AudioConferenceActivity : AppCompatActivity() {
         Thread {
             viewModel.deleteLastSentToken(currentReceiverUser?.uid.toString(),
                 auth.currentUser?.uid.toString())
+            database.reference.child("Chats").child("Calls").child(auth.currentUser?.uid.toString()).removeValue()
         }.start()
 
     }
@@ -267,6 +268,7 @@ class AudioConferenceActivity : AppCompatActivity() {
         super.onDestroy()
         Thread {
             database.reference.child("Chats").child("Calls").child(currentReceiverUser?.uid.toString()).child(auth.currentUser?.uid.toString()).removeValue()
+            database.reference.child("Chats").child("Calls").child(auth.currentUser?.uid.toString()).removeValue()
         }.start()
     }
 }

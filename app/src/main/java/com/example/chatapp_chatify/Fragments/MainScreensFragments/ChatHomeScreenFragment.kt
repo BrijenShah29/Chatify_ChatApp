@@ -67,7 +67,6 @@ class ChatHomeScreenFragment : Fragment() {
         binding = FragmentChatScreenBinding.inflate(layoutInflater)
 
         val adapter = ChatListAdapter(requireContext(),userManager,auth,db,messageViewModel)
-        binding.chatListRecycler.adapter = adapter
 
         viewModel.fetchedAllUsersList.observe(viewLifecycleOwner, Observer {
             val data = ArrayList<Users>()
@@ -77,7 +76,9 @@ class ChatHomeScreenFragment : Fragment() {
                     data.add(each)
                 }
             }
+            binding.chatListRecycler.adapter = adapter
             adapter.submitList(data)
+            adapter.notifyDataSetChanged()
             //adapter.notifyDataSetChanged()
             //Log.d("FetchedUsersMain", it[0].name!!)
         })

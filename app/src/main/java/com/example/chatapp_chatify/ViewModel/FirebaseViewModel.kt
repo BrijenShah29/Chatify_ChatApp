@@ -32,12 +32,12 @@ class FirebaseViewModel @Inject constructor(private val firebaseUserRepository: 
     private var _profileImageUploadedUrl = MutableLiveData<String>()
 
     val profileImageUploadedUrl : LiveData<String>
-        get() = _profileImageUploadedUrl
+        get() = firebaseUserRepository.imageResponse
 
     fun uploadProfileImageToFirebaseStorage(uri: Uri,fileName: String,path : String){
 
         viewModelScope.launch {
-           _profileImageUploadedUrl = firebaseUserRepository.uploadPhotoToFirebaseStorage(uri,fileName,path) as MutableLiveData<String>
+           firebaseUserRepository.uploadPhotoToFirebaseStorage(uri,fileName,path)
 
         }
 

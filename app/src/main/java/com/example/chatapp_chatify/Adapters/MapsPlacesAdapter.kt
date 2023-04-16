@@ -1,40 +1,25 @@
 package com.example.chatapp_chatify.Adapters
 
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.chatapp_chatify.DataClass.MapsModel.Result
-import com.example.chatapp_chatify.MapsFragment
 import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.databinding.LandmarkLayoutListBinding
-import com.example.chatapp_chatify.databinding.LayoutCallLogBinding
 import com.example.chatapp_chatify.utils.OnItemSelectedListener
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.internal.managers.FragmentComponentManager
 
 
 class MapsPlacesAdapter(val context: Context) :ListAdapter<Result,MapsPlacesAdapter.PlacesViewHolder>(DiffUtilMaps()){
 
     private var listener: OnItemSelectedListener? = null
     private var previousSelectedItem : LinearLayout ? =null
-    //= (FragmentComponentManager.findActivity(context) as Activity as FragmentActivity).supportFragmentManager.findFragmentById(R.id.mapsFragment) as OnItemSelectedListener
 
-    init {
-       // listener = (FragmentComponentManager.findActivity(context) as Activity as FragmentActivity).supportFragmentManager.findFragmentById(R.id.mapsFragment) as OnItemSelectedListener
-    }
 
     inner class PlacesViewHolder(val binding : LandmarkLayoutListBinding) : RecyclerView.ViewHolder(binding.root)
     {
@@ -81,7 +66,6 @@ class MapsPlacesAdapter(val context: Context) :ListAdapter<Result,MapsPlacesAdap
     override fun onBindViewHolder(holder: PlacesViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item,context)
-        //listener = FragmentComponentManager.findActivity(context) as Activity as OnItemSelectedListener
     }
 
     class DiffUtilMaps : DiffUtil.ItemCallback<Result>(){

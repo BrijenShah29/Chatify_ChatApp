@@ -86,13 +86,6 @@ class EnterOTPFragment : Fragment() {
 
 
         // SETTING UP OTP AUTO COMPLETE
-//
-//        binding.otpView.setOtpCompletionListener {
-//            verifyButtonOnclick(it)
-//        }
-
-
-        // HIDING OTP RESENT FUNCTIONALITY FOR 60 SECONDS AT START
 
         getResendOTPVisibility()
 

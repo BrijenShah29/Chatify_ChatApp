@@ -26,7 +26,7 @@ interface Constant {
         const val USER_ID_FILE = "USER_ID_FILE"
         const val USER_ID = "USER_ID"
 
-        const val TAG ="CHATIFY_APP"
+        const val TAG = "CHATIFY_APP"
 
         const val OPPOSITE_USER_NAME_FILE = "OPPOSITE_USER_NAME_FILE"
         const val OPPOSITE_USER_NAME = "OPPOSITE_USER_NAME"
@@ -47,14 +47,13 @@ interface Constant {
 
         const val MESSAGE_TYPE_AUDIO = 2
 
-        const val MESSAGE_TYPE_LOCATION =3
+        const val MESSAGE_TYPE_LOCATION = 3
         const val CALL_TYPE_AUDIO = 0
         const val CALL_TYPE_VIDEO = 1
         const val USER_OFFLINE = 0
         const val USER_ONLINE = 1
-        const val INCOMING_CALL ="INCOMING"
-        const val OUTGOING_CALL ="OUTGOING"
-
+        const val INCOMING_CALL = "INCOMING"
+        const val OUTGOING_CALL = "OUTGOING"
 
 
         const val USER_TOKEN_FILE = "USER_TOKEN_FILE"
@@ -66,8 +65,6 @@ interface Constant {
         const val BASE_URL = "https://maps.googleapis.com/"
 
 
-
-
     }
 
-    }
+}

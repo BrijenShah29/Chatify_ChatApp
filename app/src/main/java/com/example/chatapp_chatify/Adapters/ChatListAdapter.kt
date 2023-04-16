@@ -34,21 +34,18 @@ class ChatListAdapter(
     val userManager: UserManager,
     val auth: FirebaseAuth,
     val db: FirebaseDatabase,
-    val messageViewModel: FirebaseMessagesViewModel
-) : ListAdapter<Users,ChatListAdapter.ChatListViewHolder>(DiffUtil()){
+    val messageViewModel: FirebaseMessagesViewModel,
+) : ListAdapter<Users, ChatListAdapter.ChatListViewHolder>(DiffUtil()) {
 
-    inner class ChatListViewHolder(val binding : LayoutMessagesChatscreenBinding) : RecyclerView.ViewHolder(binding.root){
-        val previousTimeStamp : Long = 0
+    inner class ChatListViewHolder(val binding: LayoutMessagesChatscreenBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val previousTimeStamp: Long = 0
         fun bind(
             item: Users,
-            context: Context
+            context: Context,
         ) {
-
             binding.userName.text = item.name
             Glide.with(context).load(item.profileImage).centerCrop().into(binding.userImage)
-
-
-
         }
 
 
@@ -60,64 +57,68 @@ class ChatListAdapter(
         val cal = Calendar.getInstance()
         cal.timeZone = TimeZone.getTimeZone(cal.timeZone.toZoneId())
         cal.timeInMillis = timestamp
-        var att=""
+        var att = ""
         val tt = cal.get(Calendar.AM_PM)
-        att = if(tt==0) {
+        att = if (tt == 0) {
             "AM"
         } else {
             "PM"
         }
-        return String.format("%02d:%02d %s", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), att)
+        return String.format("%02d:%02d %s",
+            cal.get(Calendar.HOUR_OF_DAY),
+            cal.get(Calendar.MINUTE),
+            att)
 
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
-        val binding = LayoutMessagesChatscreenBinding.inflate(LayoutInflater.from(context),parent,false)
+        val binding =
+            LayoutMessagesChatscreenBinding.inflate(LayoutInflater.from(context), parent, false)
         return ChatListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
         val item = getItem(position)
-        var previousTime : Long = 0
+        var previousTime: Long = 0
         val senderRoom = auth.currentUser?.uid.toString() + item.uid.toString()
         holder.binding.onlineStatusImage.visibility = View.GONE
         holder.binding.messageDoubleTick.visibility = GONE
-        holder.bind(item,context)
+        holder.bind(item, context)
 
-        db.reference.child("Chats").child(senderRoom).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()) {
-                    val lastMessage = snapshot.child("LastMessage").getValue(String::class.java)
-                    val longTime = snapshot.child("LastMessageTime").getValue(Long::class.java)?.toLong()
-                    holder.binding.messageText.text = lastMessage.toString()
-                    holder.binding.messageText.setTextColor(Color.BLACK)
-                    holder.binding.messageText.setTextAppearance(BOLD)
-                    holder.binding.messageTime.text = getTimeFromLong(longTime!!)
-                    //holder.binding.messageDoubleTick.visibility = VISIBLE
+        db.reference.child("Chats").child(senderRoom)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val lastMessage = snapshot.child("LastMessage").getValue(String::class.java)
+                        val longTime =
+                            snapshot.child("LastMessageTime").getValue(Long::class.java)?.toLong()
+                        holder.binding.messageText.text = lastMessage.toString()
+                        holder.binding.messageText.setTextColor(Color.BLACK)
+                        holder.binding.messageText.setTextAppearance(BOLD)
+                        holder.binding.messageTime.text = getTimeFromLong(longTime!!)
+                        //holder.binding.messageDoubleTick.visibility = VISIBLE
 
-                    if(previousTime!=longTime){
-                        holder.binding.messageBadgeText.visibility = VISIBLE
-                        previousTime = longTime
-                    }
-                    else
-                    {
+                        if (previousTime != longTime) {
+                            holder.binding.messageBadgeText.visibility = VISIBLE
+                            previousTime = longTime
+                        } else {
+                            holder.binding.messageBadgeText.visibility = INVISIBLE
+                            // holder.binding.messageDoubleTick.visibility = VISIBLE
+                        }
+                        //holder.binding.messageDoubleTick.visibility = View.GONE
+                    } else {
                         holder.binding.messageBadgeText.visibility = INVISIBLE
-                       // holder.binding.messageDoubleTick.visibility = VISIBLE
+                        holder.binding.messageText.text = "Tap To Chat"
+                        // holder.binding.messageDoubleTick.visibility = INVISIBLE
                     }
-                    //holder.binding.messageDoubleTick.visibility = View.GONE
-                }else
-                {
-                    holder.binding.messageBadgeText.visibility = INVISIBLE
-                    holder.binding.messageText.text = "Tap To Chat"
-                   // holder.binding.messageDoubleTick.visibility = INVISIBLE
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
 
-            }
+                override fun onCancelled(error: DatabaseError) {
 
-        })
+                }
+
+            })
 
 
 
@@ -139,11 +140,11 @@ class ChatListAdapter(
             // Navigate to the user chat screen with data of users
 
             val bundle = Bundle()
-            bundle.putParcelable("UserData",item)
-            bundle.putString("senderRoom",senderRoom)
+            bundle.putParcelable("UserData", item)
+            bundle.putString("senderRoom", senderRoom)
 
-            Navigation.findNavController(holder.itemView).navigate(R.id.action_chatScreenFragment_to_userChatFragment,bundle)
-
+            Navigation.findNavController(holder.itemView)
+                .navigate(R.id.action_chatScreenFragment_to_userChatFragment, bundle)
 
 
         }
@@ -153,9 +154,7 @@ class ChatListAdapter(
     class DiffUtil() : androidx.recyclerview.widget.DiffUtil.ItemCallback<Users>() {
 
         override fun areItemsTheSame(oldItem: Users, newItem: Users): Boolean {
-            return oldItem.uid == newItem.uid &&
-                    oldItem.name == newItem.name &&
-                    oldItem.phoneNumber == newItem.phoneNumber
+            return oldItem.uid == newItem.uid
 
         }
 

@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.chatapp_chatify.DataClass.MessagesModel
-import com.example.chatapp_chatify.MapsFragment
 import com.example.chatapp_chatify.R
 import com.example.chatapp_chatify.databinding.IncomingMessageLayoutBinding
 import com.example.chatapp_chatify.databinding.LayoutDeleteMessageBinding
@@ -64,25 +63,25 @@ class MessagesAdapter(
 
             when (chatMessage.messageType) {
                 Constant.MESSAGE_TYPE_TEXT -> {
-                    viewBinding.outgoingMessageText.text = chatMessage.message.toString()
-                    viewBinding.outGoingMessageLayout.visibility = View.VISIBLE
                     viewBinding.audioPlayerLayout.visibility = View.GONE
                     viewBinding.sentImageLayout.visibility = View.GONE
                     viewBinding.locationLayout.visibility = View.GONE
+                    viewBinding.outGoingMessageLayout.visibility = View.VISIBLE
+                    viewBinding.outgoingMessageText.text = chatMessage.message.toString()
                 }
                 Constant.MESSAGE_TYPE_IMAGE -> {
+                    viewBinding.locationLayout.visibility = View.GONE
                     viewBinding.outGoingMessageLayout.visibility = View.GONE
                     viewBinding.audioPlayerLayout.visibility = View.GONE
-                    viewBinding.locationLayout.visibility = View.GONE
                     viewBinding.sentImageLayout.visibility = View.VISIBLE
                     Glide.with(context).load(Uri.parse(chatMessage.message)).placeholder(
                         AppCompatResources.getDrawable(context,R.drawable.gallary)).centerCrop()
                         .into(viewBinding.sentImage)
                 }
                 Constant.MESSAGE_TYPE_AUDIO -> {
+                    viewBinding.locationLayout.visibility = View.GONE
                     viewBinding.outGoingMessageLayout.visibility = View.GONE
                     viewBinding.sentImageLayout.visibility = View.GONE
-                    viewBinding.locationLayout.visibility = View.GONE
                     viewBinding.audioPlayerLayout.visibility = View.VISIBLE
                     viewBinding.audioPlayText.text = "Audio File"
                     previousAudioDataSource = chatMessage.message.toString()
@@ -95,8 +94,11 @@ class MessagesAdapter(
                             viewBinding.audioPlayButton.setImageDrawable(AppCompatResources.getDrawable(context,R.drawable.ic_baseline_pause_24))
                             // start the player
                             try {
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
+                                mediaPlayer?.stop()
+                                mediaPlayer?.reset()
                                 mediaPlayer.setDataSource(previousAudioDataSource)
+                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
                                 mediaPlayer.prepare()
                                 mediaPlayer.start()
                                 viewBinding.audioPlayButton.isClickable = false
@@ -106,7 +108,7 @@ class MessagesAdapter(
                                         AppCompatResources.getDrawable(context,me.jagar.chatvoiceplayerlibrary.R.drawable.ic_play_arrow_white_24dp)
                                     )
                                     mediaPlayer.stop()
-                                    mediaPlayer.release()
+                                    mediaPlayer.reset()
                                 }
 
                             } catch (e: IOException) {
@@ -523,10 +525,9 @@ class MessagesDiffUtil : DiffUtil.ItemCallback<MessagesModel>() {
 
 
     override fun areContentsTheSame(oldItem: MessagesModel, newItem: MessagesModel): Boolean {
-       return oldItem == newItem
-//        return oldItem.messageId == newItem.messageId &&
-//                oldItem.message == newItem.message &&
-//                oldItem.messageReaction == oldItem.messageReaction
+       return oldItem == newItem &&
+               oldItem.message == newItem.message
+
     }
 
 }

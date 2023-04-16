@@ -50,21 +50,22 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var binding : ActivityMainBinding
-    lateinit var toggle : ActionBarDrawerToggle
-    lateinit var userName : String
-    private lateinit var userNumber : String
-    private lateinit var userImage : String
+    private lateinit var binding: ActivityMainBinding
+    lateinit var toggle: ActionBarDrawerToggle
+    lateinit var userName: String
+    private lateinit var userNumber: String
+    private lateinit var userImage: String
+
     @Inject
     lateinit var userManager: UserManager
 
-    var currentReceiver : Users? = null
+    var currentReceiver: Users? = null
 
     private val messageViewModel by viewModels<FirebaseMessagesViewModel>()
 
 
     // ASKING FOR PERMISSIONS
-    private lateinit var permissionLauncher : ActivityResultLauncher<Array<String>>
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     private var isReadPermissionGranted = false
     private var isLocationPermissionGranted = false
@@ -73,26 +74,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var isNotificationPermissionGranted = false
 
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
-             permissions->
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 
-             isReadPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: isReadPermissionGranted
-             isLocationPermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: isLocationPermissionGranted
-             isCameraPermissionGranted = permissions[Manifest.permission.CAMERA] ?: isCameraPermissionGranted
-             isRecordPermissionGranted = permissions[Manifest.permission.RECORD_AUDIO] ?: isRecordPermissionGranted
-             isNotificationPermissionGranted = permissions[if (Build.VERSION.SDK_INT >= 33) {
-                 Manifest.permission.POST_NOTIFICATIONS
-             } else { Log.d(Constant.TAG,Build.VERSION.SDK_INT.toString())
-             }] ?:isNotificationPermissionGranted
-         }
+                isReadPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
+                    ?: isReadPermissionGranted
+                isLocationPermissionGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION]
+                    ?: isLocationPermissionGranted
+                isCameraPermissionGranted =
+                    permissions[Manifest.permission.CAMERA] ?: isCameraPermissionGranted
+                isRecordPermissionGranted =
+                    permissions[Manifest.permission.RECORD_AUDIO] ?: isRecordPermissionGranted
+                isNotificationPermissionGranted = permissions[if (Build.VERSION.SDK_INT >= 33) {
+                    Manifest.permission.POST_NOTIFICATIONS
+                } else {
+                    Log.d(Constant.TAG, Build.VERSION.SDK_INT.toString())
+                }] ?: isNotificationPermissionGranted
+            }
         requestPermission()
 
         val appbar = binding.appBar
@@ -104,9 +107,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         appbar.title = ""
 
-        val popupMenu = PopupMenu(this,null)
+        val popupMenu = PopupMenu(this, null)
         popupMenu.inflate(R.menu.bottom_navigation)
-        binding.bottomBar.setupWithNavController(popupMenu.menu,navController)
+        binding.bottomBar.setupWithNavController(popupMenu.menu, navController)
 
 
         toggle = getActionBarDrawerToggle(binding.mainDrawer, binding.appBar)
@@ -117,17 +120,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         binding.bottomBar.onItemSelected = {
-            when(it){
+            when (it) {
                 0 -> {
 
                 }
                 1 -> {
                     onBackPressed()
                 }
-                2-> {
+                2 -> {
 
                 }
-                3->{
+                3 -> {
 
                 }
             }
@@ -140,15 +143,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerImage = header.findViewById<ImageView>(R.id.header_user_image)
         val headerNumber = header.findViewById<TextView>(R.id.header_user_number)
 
-        navController.addOnDestinationChangedListener(object  : NavController.OnDestinationChangedListener{
+        navController.addOnDestinationChangedListener(object :
+            NavController.OnDestinationChangedListener {
 
-            override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?)
-            {
+            override fun onDestinationChanged(
+                controller: NavController,
+                destination: NavDestination,
+                arguments: Bundle?,
+            ) {
 
-                when(destination.id)
-                {
-                    R.id.welcomePage->
-                    {
+                when (destination.id) {
+                    R.id.welcomePage -> {
                         binding.mainDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         binding.appBarLayout.visibility = View.GONE
                         binding.bottomBar.visibility = View.GONE
@@ -156,32 +161,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         toggle.isDrawerIndicatorEnabled = false
 
                     }
-                    R.id.authenticationFragment->
-                    {
+                    R.id.authenticationFragment -> {
                         binding.appBarLayout.visibility = View.GONE
                         binding.mainDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         binding.bottomBar.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = false
                         binding.sideDrawer.visibility = View.GONE
                     }
-                    R.id.enterOTPFragment ->
-                    {
+                    R.id.enterOTPFragment -> {
                         binding.appBarLayout.visibility = View.GONE
                         binding.bottomBar.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = false
                         binding.mainDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         binding.sideDrawer.visibility = View.GONE
                     }
-                    R.id.registerationFragment->
-                    {
+                    R.id.registerationFragment -> {
                         binding.appBarLayout.visibility = View.GONE
                         binding.bottomBar.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = false
                         binding.mainDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                         binding.sideDrawer.visibility = View.GONE
                     }
-                    R.id.chatScreenFragment->
-                    {
+                    R.id.chatScreenFragment -> {
 
                         binding.appBarLayout.visibility = View.VISIBLE
                         binding.bottomBar.visibility = View.VISIBLE
@@ -199,42 +200,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         binding.appBar.setTitle(R.string.app_name)
                         headerTitle.text = userName
                         headerNumber.text = userNumber
-                        if(userImage!= Constant.USER_IMAGE_FILE)
-                        {
-                            Glide.with(this@MainActivity).load(userImage).placeholder(this@MainActivity.getDrawable(R.drawable.user)).centerCrop().into(headerImage)
+                        if (userImage != Constant.USER_IMAGE_FILE) {
+                            Glide.with(this@MainActivity).load(userImage)
+                                .placeholder(this@MainActivity.getDrawable(R.drawable.user))
+                                .centerCrop().into(headerImage)
                         }
 
                     }
 
-                    R.id.callsFragment->
-                    {
+                    R.id.callsFragment -> {
                         binding.userDetails.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = true
                         binding.bottomBar.visibility = View.VISIBLE
                         appbar.logo = null
 
                     }
-                    R.id.settingsFragment->
-                    {
+                    R.id.settingsFragment -> {
                         binding.userDetails.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = true
                         binding.bottomBar.visibility = View.VISIBLE
                         appbar.logo = null
                     }
-                    R.id.webFragment2->
-                    {
+                    R.id.webFragment2 -> {
                         binding.userDetails.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = true
                         binding.bottomBar.visibility = View.VISIBLE
                         appbar.logo = null
                     }
-                    R.id.userChatFragment->
-                    {
+                    R.id.userChatFragment -> {
                         binding.userDetails.visibility = View.VISIBLE
                         binding.userName.text = userManager.getOppositeUserName()
                         binding.appBar.setTitle(R.string.space)
                         binding.mainDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-                        Glide.with(this@MainActivity).load(userManager.getOppositeUserProfileImage()).centerCrop().into(binding.userImage)
+                        Glide.with(this@MainActivity)
+                            .load(userManager.getOppositeUserProfileImage()).centerCrop()
+                            .into(binding.userImage)
                         binding.bottomBar.visibility = View.GONE
                         toggle.isDrawerIndicatorEnabled = false
                         binding.appBar.setNavigationIcon(R.drawable.back_button)
@@ -258,12 +258,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-
     }
 
 
-    private fun getActionBarDrawerToggle(mainDrawer: DrawerLayout, appBar: MaterialToolbar): ActionBarDrawerToggle {
-        val toggle = ActionBarDrawerToggle(this,mainDrawer,appBar,R.string.open,R.string.close)
+    private fun getActionBarDrawerToggle(
+        mainDrawer: DrawerLayout,
+        appBar: MaterialToolbar,
+    ): ActionBarDrawerToggle {
+        val toggle = ActionBarDrawerToggle(this, mainDrawer, appBar, R.string.open, R.string.close)
         mainDrawer.addDrawerListener(toggle)
         toggle.syncState()
         return toggle
@@ -271,37 +273,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.appbar_menu,menu)
+        menuInflater.inflate(R.menu.appbar_menu, menu)
         return true
     }
 
     //NEEDS TO BE EDITED FOR SIDE NAVIGATION DRAWER
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Log.d("Drawer Navigation","Drawer Navigation clicked")
+        Log.d("Drawer Navigation", "Drawer Navigation clicked")
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         val navController = navHostFragment!!.findNavController()
-        when(item.itemId)
-        {
-            R.id.myAccount_drawer ->
-            {
+        when (item.itemId) {
+            R.id.myAccount_drawer -> {
                 navController.navigate(R.id.settingsFragment)
             }
-            R.id.calls_drawer ->
-            {
+            R.id.calls_drawer -> {
                 navController.navigate(R.id.callsFragment)
             }
-            R.id.web_drawer ->
-            {
+            R.id.web_drawer -> {
                 navController.navigate(R.id.webFragment2)
             }
-            R.id.signOut_drawer ->
-            {
+            R.id.signOut_drawer -> {
                 Firebase.auth.signOut()
-                navController.navigate(R.id.welcomePage,null,
+                navController.navigate(R.id.welcomePage, null,
                     NavOptions.Builder().setPopUpTo(R.id.chatScreenFragment, true).build())
             }
             else -> {
-                Log.d("Invalid","Invalid selection")
+                Log.d("Invalid", "Invalid selection")
             }
 
         }
@@ -311,37 +308,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         val navController = navHostFragment!!.findNavController()
 
-        if(toggle.onOptionsItemSelected(item)){
+        if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         when (item.itemId) {
 
-            R.id.videoCall_appBar->{
+            R.id.videoCall_appBar -> {
                 Toast.makeText(this, "video call started", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, VideoConferenceActivity::class.java)
                 val bundle = Bundle()
-                bundle.putParcelable("User",currentReceiver)
+                bundle.putParcelable("User", currentReceiver)
                 bundle.putInt("callType", Constant.CALL_TYPE_VIDEO)
-                if(!Constant.CALL_TOKEN.isNullOrBlank())
-                {
-                    bundle.putString("Token",Constant.CALL_TOKEN)
+                if (!Constant.CALL_TOKEN.isNullOrBlank()) {
+                    bundle.putString("Token", Constant.CALL_TOKEN)
                 }
                 intent.putExtras(bundle)
                 startActivity(intent)
                 //navController.navigate(R.id.action_userChatFragment_to_conferenceFragment,bundle)
             }
-            R.id.audioCall_appBar ->
-            {
+            R.id.audioCall_appBar -> {
                 Toast.makeText(this, "audio call started", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, AudioConferenceActivity::class.java)
                 val bundle = Bundle()
-                bundle.putParcelable("User",currentReceiver)
+                bundle.putParcelable("User", currentReceiver)
                 bundle.putInt("callType", Constant.CALL_TYPE_AUDIO)
 //                if(!Constant.CALL_TOKEN.isNullOrBlank())
 //                {
@@ -352,7 +346,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 //navController.navigate(R.id.action_userChatFragment_to_conferenceFragment,bundle)
             }
             else -> {
-                Toast.makeText(applicationContext, "Something Went Wrong!!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Something Went Wrong!!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -360,68 +355,82 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if(binding.mainDrawer.isDrawerOpen(GravityCompat.START)){
+        if (binding.mainDrawer.isDrawerOpen(GravityCompat.START)) {
             binding.mainDrawer.closeDrawer(GravityCompat.START)
-        }else {
+        } else {
             super.onBackPressed()
         }
 
     }
 
-    private fun requestPermission(){
-        isReadPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    private fun requestPermission() {
+        isReadPermissionGranted = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 
-        isCameraPermissionGranted = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        isCameraPermissionGranted = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
 
-        isLocationPermissionGranted = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED
+        isLocationPermissionGranted = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-        isRecordPermissionGranted = ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        isRecordPermissionGranted = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
 
 
-        val pendingPermissionRequest : MutableList<String> = ArrayList()
+        val pendingPermissionRequest: MutableList<String> = ArrayList()
 
-        if(!isReadPermissionGranted){
+        if (!isReadPermissionGranted) {
             pendingPermissionRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-            val snack = Snackbar.make(binding.root,"Please grant required Read permission",Snackbar.LENGTH_SHORT)
+            val snack = Snackbar.make(binding.root,
+                "Please grant required Read permission",
+                Snackbar.LENGTH_SHORT)
             snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
             snack.show()
 
         }
-        if(!isLocationPermissionGranted){
+        if (!isLocationPermissionGranted) {
             pendingPermissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            val snack = Snackbar.make(binding.root,"Please grant required Location permission",Snackbar.LENGTH_SHORT)
+            val snack = Snackbar.make(binding.root,
+                "Please grant required Location permission",
+                Snackbar.LENGTH_SHORT)
             snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
             snack.show()
         }
-        if(!isCameraPermissionGranted){
+        if (!isCameraPermissionGranted) {
             pendingPermissionRequest.add(Manifest.permission.CAMERA)
-            val snack = Snackbar.make(binding.root,"Please grant required Camera permission",Snackbar.LENGTH_SHORT)
+            val snack = Snackbar.make(binding.root,
+                "Please grant required Camera permission",
+                Snackbar.LENGTH_SHORT)
             snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
             snack.show()
         }
 
-        if(!isRecordPermissionGranted){
+        if (!isRecordPermissionGranted) {
             pendingPermissionRequest.add(Manifest.permission.RECORD_AUDIO)
-            val snack = Snackbar.make(binding.root,"Please grant required Record Audio permission",Snackbar.LENGTH_SHORT)
+            val snack = Snackbar.make(binding.root,
+                "Please grant required Record Audio permission",
+                Snackbar.LENGTH_SHORT)
             snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
             snack.show()
         }
-            if (Build.VERSION.SDK_INT >= 33) {
-                if(!isNotificationPermissionGranted){
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (!isNotificationPermissionGranted) {
                 pendingPermissionRequest.add(Manifest.permission.POST_NOTIFICATIONS)
-                    val snack = Snackbar.make(binding.root,"Please grant required Notification Permission",Snackbar.LENGTH_SHORT)
-                    snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
-                    snack.show()
+                val snack = Snackbar.make(binding.root,
+                    "Please grant required Notification Permission",
+                    Snackbar.LENGTH_SHORT)
+                snack.animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
+                snack.show()
             }
         }
 
-        if(pendingPermissionRequest.isNotEmpty()){
+        if (pendingPermissionRequest.isNotEmpty()) {
             permissionLauncher.launch(pendingPermissionRequest.toTypedArray())
         }
 
     }
-    fun setCurrentReceiverUser(user:Users)
-    {
+
+    fun setCurrentReceiverUser(user: Users) {
         currentReceiver = user
     }
 
